@@ -2,7 +2,6 @@ package com.example.appnotificationmanagerdemo1;
 
 import java.lang.reflect.Field;
 import java.util.Random;
-
 import android.app.Notification;
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
@@ -166,7 +165,7 @@ public class jNotificationManager /*extends ...*/ {
 		}
 	    if (cls != null)
 	    	intent.setClass(controls.activity, cls);	 	    	   	    
-        PendingIntent pendingIntent = PendingIntent.getActivity(context, mId, intent, PendingIntent.FLAG_CANCEL_CURRENT);  	  
+        PendingIntent pendingIntent = PendingIntent.getActivity(context, mId, intent, PendingIntent.FLAG_CANCEL_CURRENT | PendingIntent.FLAG_IMMUTABLE);
         mNotificationBuilder.setDeleteIntent(pendingIntent);    	
    } 
     

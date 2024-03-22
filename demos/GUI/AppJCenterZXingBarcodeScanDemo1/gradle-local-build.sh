@@ -1,5 +1,5 @@
-export PATH=/android/sdkr25/platform-tools:$PATH
-export GRADLE_HOME=/android/gradle-6.6.1
+export PATH=/Data/lamw_manager/LAMW/sdk/platform-tools:$PATH
+export GRADLE_HOME=/Data/lazdev/HWAndroid/gradle-8.5/
 export PATH=$PATH:$GRADLE_HOME/bin
 . ~/.bashrc
 gradle clean build --info

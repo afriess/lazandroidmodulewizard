@@ -1,4 +1,4 @@
-set Path=%PATH%;C:\android\sdkr25\platform-tools
-set GRADLE_HOME=C:\android\gradle-6.6.1
+set Path=%PATH%;C:\Data\lamw_manager\LAMW\sdk\platform-tools
+set GRADLE_HOME=C:\Data\lazdev\HWAndroid\gradle-8.5\
 set PATH=%PATH%;%GRADLE_HOME%\bin
 gradle clean bundle --info

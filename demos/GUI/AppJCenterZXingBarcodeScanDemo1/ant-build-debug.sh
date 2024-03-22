@@ -1,4 +1,4 @@
-export PATH=/adt32/ant/bin:$PATH
-export JAVA_HOME=/Program Files/Java/jdk1.8.0_151
-cd /android/workspace/AppJCenterZXingBarcodeScanDemo1
+export PATH=/Data/lamw_manager/LAMW/apache-ant-1.10.5/bin:$PATH
+export JAVA_HOME=/Data/lazdev/HWAndroid/jdk-21.0.2+13
+cd /Data/lazdev/HWAndroid/ccr/lamw/demos/GUI/AppJCenterZXingBarcodeScanDemo1/
 ant -Dtouchtest.enabled=true debug

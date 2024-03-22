@@ -1,2 +1,2 @@
-C:\android\sdkr25\platform-tools\adb logcat &
+C:\Data\lamw_manager\LAMW\sdk\platform-tools\adb logcat &
 pause

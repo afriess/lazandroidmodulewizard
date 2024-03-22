@@ -1,25 +1,23 @@
 buildscript {
     repositories {
-        jcenter()
-        //android plugin version >= 3.0.0 [in classpath] need gradle version >= 4.1 and google() method
+        mavenCentral()
         google()
     }
     dependencies {
-        classpath 'com.android.tools.build:gradle:3.4.1'
+        classpath 'com.android.tools.build:gradle:8.2.0' 
     }
 }
 allprojects {
     repositories {
-       google()
        jcenter()
-       maven { url 'https://jitpack.io' }
+       google()
+       mavenCentral()
+       maven {url 'https://jitpack.io'}
     }
 }
 apply plugin: 'com.android.application'
 android {
-    lintOptions {
-       abortOnError false
-    }
+    namespace "org.lamw.appbarcodegendemo1"
     splits {
         abi {
             enable true
@@ -28,12 +26,18 @@ android {
             universalApk false
         }
     }
-    compileSdkVersion 28
+    compileOptions {
+        sourceCompatibility 1.8
+        targetCompatibility 1.8
+    }
+    compileSdk 34
     defaultConfig {
-            minSdkVersion 14
-            targetSdkVersion 28
+            minSdkVersion 24
+            targetSdkVersion 34
             versionCode 1
             versionName "1.0"
+            multiDexEnabled true
+            ndk { debugSymbolLevel 'FULL' }
     }
     sourceSets {
         main {
@@ -44,18 +48,39 @@ android {
             renderscript.srcDirs = ['src']
             res.srcDirs = ['res']
             assets.srcDirs = ['assets']
-            jni.srcDirs = []
             jniLibs.srcDirs = ['libs']
         }
         debug.setRoot('build-types/debug')
         release.setRoot('build-types/release')
     }
+    buildTypes {
+        debug {
+            minifyEnabled false
+            debuggable true
+            jniDebuggable true
+        }
+        release {
+            minifyEnabled false
+            debuggable false
+            jniDebuggable false
+        }
+    }
+    buildFeatures {
+        aidl true
+    }
+    lint {
+        abortOnError false
+    }
 }
 dependencies {
-    implementation fileTree(include: ['*.jar'], dir: 'libs')
+    implementation  fileTree(include: ['*.jar'], dir: 'libs')
+    implementation ('com.journeyapps:zxing-android-embedded:4.3.0') { transitive = false }
+    implementation 'com.google.zxing:core:3.4.1'
+    implementation 'androidx.core:core:1.9.0'
+    implementation 'androidx.multidex:multidex:2.0.1'
 }
- 
-task run(type: Exec, dependsOn: ':installDebug') {
+tasks.register('run', Exec) {
+ dependsOn ':installDebug'
 	if (System.properties['os.name'].toLowerCase().contains('windows')) {
 	    commandLine 'cmd', '/c', 'adb', 'shell', 'am', 'start', '-n', "org.lamw.appbarcodegendemo1/.App"
 	} else {
@@ -64,6 +89,5 @@ task run(type: Exec, dependsOn: ':installDebug') {
 }
  
 wrapper {
-    gradleVersion = '5.4.1'
+    gradleVersion = '8.5' 
 }
-//how to use: look for "gradle_readme.txt"

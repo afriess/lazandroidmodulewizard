@@ -1,0 +1,3 @@
+public java.lang.Object jcDatalogic_jCreate(long _self) {
+  return (java.lang.Object)(new jcDatalogic(this,_self));
+}

@@ -1,6 +1,6 @@
 package org.lamw.appbarcodegendemo1;
 
-//Lamw: Lazarus Android Module Wizard - version 0.8.4 - 12 March - 2019
+//Lamw: Lazarus Android Module Wizard - version 0.8.6 - 30 October - 2020
 //Form Designer and Components development model!
 //https://github.com/jmpessoa/lazandroidmodulewizard
 //http://forum.lazarus.freepascal.org/index.php/topic,21919.270.html
@@ -21,10 +21,13 @@ package org.lamw.appbarcodegendemo1;
 
 
 import java.lang.Override;
+import java.lang.reflect.Method;
+
 import android.app.Activity;
 import android.content.Intent;
 import android.content.res.Configuration;
-import android.content.pm.ActivityInfo; 
+import android.content.pm.ActivityInfo;
+import android.view.Window;
 import android.widget.RelativeLayout;
 import android.view.ContextMenu;
 import android.view.ContextMenu.ContextMenuInfo;
@@ -41,7 +44,7 @@ import android.graphics.Canvas;
 
 public class App extends Activity {
     
-private Controls       controls;
+    private Controls       controls;
     
     private int screenOrientation = 0; //For update screen orientation. [by TR3E]
     private boolean rlSizeChanged = false;
@@ -136,6 +139,7 @@ private Controls       controls;
    //[ifdef_api23up]
     @Override
     public void onRequestPermissionsResult(int permsRequestCode, String[] permissions, int[] grantResults){
+    	super.onRequestPermissionsResult(permsRequestCode, permissions, grantResults);
     	
         if ( (permissions.length > 0) && (grantResults.length > 0) ) {
             for (int i = 0; i < permissions.length; i++) {
@@ -183,7 +187,7 @@ private Controls       controls;
     }	   	
  
     @Override
-    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {    	
      controls.jAppOnActivityResult(requestCode,resultCode,data);                                     
     }
 
@@ -247,11 +251,27 @@ private Controls       controls;
        return super.onPrepareOptionsMenu(menu);
    }
    
-   /*by jmpessoa: TODO :Handles opened menu */
+   /*Handle opened menu */
   @Override     
    public boolean onMenuOpened(int featureId, Menu menu) {
-	   //TODO!!!!
-     return super.onMenuOpened(featureId, menu);
+	   //https://stackoverflow.com/questions/33820366/how-to-show-icon-with-menus-in-android
+      if(featureId == Window.FEATURE_ACTION_BAR && menu != null){
+          if(menu.getClass().getSimpleName().equals("MenuBuilder")){
+              try{
+                  Method m = menu.getClass().getDeclaredMethod(
+                          "setOptionalIconsVisible", Boolean.TYPE);
+                  m.setAccessible(true);
+                  m.invoke(menu, true);
+              }
+              catch(NoSuchMethodException e){
+                  //Log.e(TAG, "onMenuOpened", e);
+              }
+              catch(Exception e){
+                  throw new RuntimeException(e);
+              }
+          }
+      }
+      return super.onMenuOpened(featureId, menu);
    }
    
    //https://abhik1987.wordpress.com/tag/android-disable-home-button/
@@ -264,12 +284,12 @@ private Controls       controls;
    public boolean onKeyDown(int keyCode, KeyEvent event) {
 	   
 	  char c = event.getDisplayLabel();	        
-	  //boolean mute = controls.jAppOnKeyDown(c,keyCode,KeyEvent.keyCodeToString(keyCode));  //TODO
-      //if (mute) return false;	  
+	  boolean mute = false;
+	  
       switch(keyCode) {
             
       case KeyEvent.KEYCODE_BACK:
-    	 boolean mute = controls.jAppOnKeyDown(c,keyCode,KeyEvent.keyCodeToString(keyCode));    	  
+    	 mute = controls.jAppOnKeyDown(c,keyCode,KeyEvent.keyCodeToString(keyCode));    	  
          if (!mute) { //continue ...
         	 onBackPressed();
              return true;
@@ -278,20 +298,20 @@ private Controls       controls;
          }
          
       case KeyEvent.KEYCODE_MENU:     	     	      	          
-    	 controls.jAppOnKeyDown(c,keyCode,KeyEvent.keyCodeToString(keyCode));
+    	 mute = controls.jAppOnKeyDown(c,keyCode,KeyEvent.keyCodeToString(keyCode));
          break;
               
         case KeyEvent.KEYCODE_SEARCH:
-          controls.jAppOnKeyDown(c,keyCode,KeyEvent.keyCodeToString(keyCode));
+          mute = controls.jAppOnKeyDown(c,keyCode,KeyEvent.keyCodeToString(keyCode));
           break;
                     
         case KeyEvent.KEYCODE_VOLUME_UP:
           //event.startTracking();  //TODO
-          controls.jAppOnKeyDown(c,keyCode,KeyEvent.keyCodeToString(keyCode));
+          mute = controls.jAppOnKeyDown(c,keyCode,KeyEvent.keyCodeToString(keyCode));
           break;
           
         case KeyEvent.KEYCODE_VOLUME_DOWN:
-          controls.jAppOnKeyDown(c,keyCode,KeyEvent.keyCodeToString(keyCode));
+          mute = controls.jAppOnKeyDown(c,keyCode,KeyEvent.keyCodeToString(keyCode));
           break;
           
           /*commented! need SDK API >= 18 [Android 4.3] to compile!*/
@@ -319,8 +339,15 @@ private Controls       controls;
         case KeyEvent.KEYCODE_NUM_LOCK:
             controls.jAppOnKeyDown(c,keyCode,KeyEvent.keyCodeToString(keyCode));
             break;            
-        //default:  controls.jAppOnKeyDown(c,keyCode,KeyEvent.keyCodeToString(keyCode));         	
+
+        default:  mute = controls.jAppOnKeyDown(c,keyCode,KeyEvent.keyCodeToString(keyCode));         	
       }      
-      return super.onKeyDown(keyCode, event);      
+
+      if (mute) 
+      {
+        	 return true;
+      } else {
+        	 return super.onKeyDown(keyCode, event);        	 
+      }       
    }        
 }

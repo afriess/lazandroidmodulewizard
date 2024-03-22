@@ -152,7 +152,7 @@ procedure Register;
 
 implementation
 
-uses Forms, Laz2_XMLCfg;
+uses Forms, Laz2_XMLCfg, LazDebuggerIntfBaseTypes;
 
 resourcestring
   GDBMiSNoAsyncMode = 'GDB does not support async mode';

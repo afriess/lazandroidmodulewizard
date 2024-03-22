@@ -1,1 +1,1 @@
-/android/sdkr25/platform-tools/adb logcat &
+/Data/lamw_manager/LAMW/sdk/platform-tools/adb logcat &

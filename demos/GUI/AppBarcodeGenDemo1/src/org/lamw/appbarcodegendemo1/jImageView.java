@@ -8,10 +8,12 @@ import java.nio.ByteBuffer;
 import javax.microedition.khronos.opengles.GL10;
 import android.content.Intent;
 import android.content.res.AssetManager;
+import android.content.res.TypedArray;
 import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
+import android.graphics.Outline;
 import android.graphics.Paint;
 import android.graphics.Color;
 import android.graphics.Matrix;
@@ -32,14 +34,11 @@ import android.os.Bundle;
 import android.provider.MediaStore;
 //import android.support.design.widget.CollapsingToolbarLayout;
 import android.util.Log;
+import android.util.TypedValue;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.animation.AccelerateInterpolator;
-import android.view.animation.AlphaAnimation;
-import android.view.animation.Animation;
-import android.view.animation.DecelerateInterpolator;
-import android.view.animation.TranslateAnimation;
+import android.view.ViewOutlineProvider;
 import android.widget.ImageView;
 import android.view.Gravity;
 import android.view.MotionEvent;
@@ -48,13 +47,15 @@ import android.widget.PopupMenu;
 
 import java.io.FileOutputStream;
 import java.io.File;
+import java.util.Locale;
 
 //-------------------------------------------------------------------------
 // jImageView
-// Reviewed by TR3E on 17/10/2019
+// Reviewed by ADiV on 2021-09-16
 //-------------------------------------------------------------------------
 
-public class jImageView extends ImageView {
+public class jImageView extends ImageView { //androidx.appcompat.widget.AppCompatImageView
+	
 	//Pascal Interface
 	private long           PasObj   = 0;      // Pascal Obj
 	private Controls        controls = null;   // Control Cass for Event
@@ -65,14 +66,15 @@ public class jImageView extends ImageView {
 	public  int             mAngle   = 0;
 	
 	Matrix mMatrix;
-	int mRadius = 20;
+	int mRadius = 24;
 
 	boolean mRounded = false;
 
 	private int animationDurationIn = 1500;
 	private int animationDurationOut = 1500;
-	private int animationMode = 0; //none, fade, LeftToRight, RightToLeft
+	private int animationMode = 0; //none, fade, LeftToRight, RightToLeft, TopToBottom, BottomToTop, MoveCustom
 
+	private boolean mClickEnable = true;
 
 	//Constructor
 	public  jImageView(android.content.Context context, Controls ctrls, long pasobj ) {
@@ -92,22 +94,38 @@ public class jImageView extends ImageView {
 		setScaleType(ImageView.ScaleType.CENTER);
 		mMatrix = new Matrix();
 
+		this.setClickable(mClickEnable);
+
 		//Init Event
-		/*onClickListener = new OnClickListener() {
+        /*
+		onClickListener = new OnClickListener() {
 			public  void onClick(View view) {
-				controls.pOnClick(PasObj,Const.Click_Default);
+				controls.pOnClick(LAMWCommon.getPasObj(), Const.Click_Default);
 			}
 		};
+		setOnClickListener(onClickListener);
+        */
 
-		setOnClickListener(onClickListener);*/
 		//this.setWillNotDraw(false); //false = fire OnDraw after Invalited ... true = not fire onDraw... thanks to tintinux			
 	}
-	
+
+	// Because we call this from onTouchEvent, this code will be executed for both
+	// normal touch events and for when the system calls this using Accessibility
+    @Override
+    public boolean performClick() {
+        super.performClick();
+        controls.pOnClick(LAMWCommon.getPasObj(), Const.Click_Default);
+        return true;
+    }
+
 	public  boolean onTouchEvent( MotionEvent event) {
-	      			
 		int act     = event.getAction() & MotionEvent.ACTION_MASK;
+
 		switch(act) {
 			case MotionEvent.ACTION_DOWN: {
+
+				this.setPressed(true); //need by ripple effect
+
 				switch (event.getPointerCount()) {
 					case 1 : { controls.pOnTouch (PasObj,Const.TouchDown,1,
 							event.getX(0),event.getY(0),0,0); break; }
@@ -126,9 +144,11 @@ public class jImageView extends ImageView {
 				}
 				break;}
 			case MotionEvent.ACTION_UP: {
-				
-				controls.pOnClick(PasObj,Const.Click_Default);
-				
+								
+				performClick();
+
+				this.setPressed(false); //need by ripple effect
+
 				switch (event.getPointerCount()) {
 					case 1 : { controls.pOnTouch (PasObj,Const.TouchUp  ,1,
 							event.getX(0),event.getY(0),0,0); break; }
@@ -148,8 +168,8 @@ public class jImageView extends ImageView {
 				break;}
 			case MotionEvent.ACTION_POINTER_UP  : {
 				
-				controls.pOnClick(PasObj,Const.Click_Default);
-				
+				performClick();
+
 				switch (event.getPointerCount()) {
 					case 1 : { controls.pOnTouch (PasObj,Const.TouchUp  ,1,
 							event.getX(0),event.getY(0),0,0); break; }
@@ -159,17 +179,21 @@ public class jImageView extends ImageView {
 				}
 				break;}
 		}
+
+		//if need tell the View to redraw the Canvas
+		//invalidate();
+
 		return true;
 	}
 
-	public void setLeftTopRightBottomWidthHeight(int _left, int _top, int _right, int _bottom, int _w, int _h) {
+	public void SetLeftTopRightBottomWidthHeight(int _left, int _top, int _right, int _bottom, int _w, int _h) {
 		 String tag = ""+_left+"|"+_top+"|"+_right+"|"+_bottom;
 	         this.setTag(tag);  //nedd by jsRecyclerView.java
 		LAMWCommon.setLeftTopRightBottomWidthHeight(_left,_top,_right,_bottom,_w,_h);
 	}
 
 
-	public  void setParent( android.view.ViewGroup _viewgroup ) {
+	public  void SetViewParent( android.view.ViewGroup _viewgroup ) {
 		LAMWCommon.setParent(_viewgroup);
 	}
 
@@ -191,6 +215,12 @@ public class jImageView extends ImageView {
 
 	public void SetBitmapImage(Bitmap _bitmap, int _width, int _height) {
 		
+		if( _bitmap == null ){
+			this.setImageBitmap(null);
+			bmp = null;
+			return;
+		}
+		
 		this.setImageResource(android.R.color.transparent);
 		
 		bmp = Bitmap.createScaledBitmap(_bitmap, _width, _height, true);
@@ -209,6 +239,12 @@ public class jImageView extends ImageView {
 
 	//http://stackoverflow.com/questions/10271020/bitmap-too-large-to-be-uploaded-into-a-texture
 	public void SetBitmapImage(Bitmap bm) {
+		
+		if( bm == null ){
+			this.setImageBitmap(null);
+			bmp = null;
+			return;
+		}
 
 		this.setImageResource(android.R.color.transparent);  //erase image ??....
 
@@ -226,8 +262,7 @@ public class jImageView extends ImageView {
 				this.setImageBitmap(bmp);
 			else
 				this.setImageBitmap(GetRoundedShape(bmp, 0));			
-		}
-		else{
+		}else{
 			// for bitmaps with dimensions that lie within the limits, load the image normally
 			if (Build.VERSION.SDK_INT >= 16) {  // why??
 				BitmapDrawable ob = new BitmapDrawable(this.getResources(), bm);
@@ -237,14 +272,13 @@ public class jImageView extends ImageView {
 				//this.setImageBitmap(bm);
 				bmp = bm;
 
-			} else {
-
-				if (!mRounded)
-					this.setImageBitmap(bm);
-				else
-					this.setImageBitmap(GetRoundedShape(bm, 0));
-
-				bmp = bm;
+			} else {			
+			 bmp = bm;
+					
+			 if (!mRounded)
+				this.setImageBitmap(bmp);
+			 else
+				this.setImageBitmap(GetRoundedShape(bmp, 0));			
 			}
 		}
 		this.invalidate();
@@ -299,11 +333,11 @@ public class jImageView extends ImageView {
 		this.invalidate();
 	}
 
-	public void setLParamWidth(int _w) {
+	public void SetLParamWidth(int _w) {
 		LAMWCommon.setLParamWidth(_w);
 	}
 
-	public void setLParamHeight(int _h) {		
+	public void SetLParamHeight(int _h) {		
 		LAMWCommon.setLParamHeight(_h);
 	}
 
@@ -311,15 +345,15 @@ public class jImageView extends ImageView {
 		LAMWCommon.setLGravity(_g);
 	}
 
-	public void setLWeight(float _w) {
+	public void SetLWeight(float _w) {
 		LAMWCommon.setLWeight(_w);
 	}
 
-	public int getLParamHeight() {
+	public int GetLParamHeight() {
 		return  LAMWCommon.getLParamHeight();
 	}
 
-	public int getLParamWidth() {				
+	public int GetLParamWidth() {				
 		return LAMWCommon.getLParamWidth();
 	}
 
@@ -335,15 +369,15 @@ public class jImageView extends ImageView {
 		} else return 0;
 	}
 
-	public void addLParamsAnchorRule(int rule) {
+	public void AddLParamsAnchorRule(int rule) {
 		LAMWCommon.addLParamsAnchorRule(rule);
 	}
 
-	public void addLParamsParentRule(int rule) {
+	public void AddLParamsParentRule(int rule) {
 		LAMWCommon.addLParamsParentRule(rule);
 	}
 
-	public void setLayoutAll(int idAnchor) {
+	public void SetLayoutAll(int idAnchor) {
 		LAMWCommon.setLayoutAll(idAnchor);
 	}
 
@@ -437,6 +471,13 @@ public class jImageView extends ImageView {
 
 	public Bitmap GetBitmapImage() {
 		return bmp;
+	}
+	
+	public Bitmap GetBitmapImage( int _x, int _y, int _width, int _height ){
+		if (bmp == null) return null;
+		if ((_x < 0) || (_y < 0) || (_width <= 0) || (_height <= 0)) return null; 
+		
+		return Bitmap.createBitmap(bmp, _x, _y, _width, _height);
 	}
 
 
@@ -554,28 +595,33 @@ public class jImageView extends ImageView {
 		
 		return b;
 	}
-	
+
 	public void SetRoundCorner() {
-		   if (this != null) {  		
-			        PaintDrawable  shape =  new PaintDrawable();
-			        
-			        shape.setCornerRadius(mRadius);
-			        
-			        int color = Color.TRANSPARENT;
-			        
-			        Drawable background = this.getBackground();
-			        
-			        if (background instanceof ColorDrawable) {
-			            color = ((ColorDrawable)this.getBackground()).getColor();
-				        shape.setColorFilter(color, Mode.SRC_ATOP);        		           		        		        
-				        //[ifdef_api16up]
-				  	    if(Build.VERSION.SDK_INT >= 16) 
-				             this.setBackground((Drawable)shape);
-				        //[endif_api16up]			          
-			        }                		  	  
-		    }
+			PaintDrawable  shape =  new PaintDrawable();
+	        shape.setCornerRadius(mRadius);                
+	        int color = Color.TRANSPARENT;
+	        Drawable background = this.getBackground();        
+	        if (background instanceof ColorDrawable) {
+	            color = ((ColorDrawable)this.getBackground()).getColor();
+		        shape.setColorFilter(color, Mode.SRC_ATOP);
+		        shape.setAlpha(((ColorDrawable)this.getBackground()).getAlpha()); // By ADiV
+		        //[ifdef_api16up]
+		  	    if(Build.VERSION.SDK_INT >= 16) this.setBackground((Drawable)shape);
+		        //[endif_api16up]		          
+	        }
+	        else {
+	        	if (mRadius != 0)
+	        	    SetRoundCorner(mRadius);
+	        	else {
+					this.setBackgroundResource(controls.GetDrawableResourceId("image_shape_default_rounded_corners")); //from ...res/drawable
+                    //[ifdef_api21up]
+					if(Build.VERSION.SDK_INT >= 21) this.setClipToOutline(true);
+                    //[endif_api21up]
+				}
+			}
 	}
-	
+
+
 	public void SetRotation( int angle ){
 		mAngle = angle;
 		this.setRotation(mAngle);
@@ -654,38 +700,45 @@ public class jImageView extends ImageView {
   */
     
 	public void BringToFront() {
-		 ViewGroup parent = LAMWCommon.getParent();
+		 
+		this.bringToFront();
 
-		 this.bringToFront();
+		LAMWCommon.BringToFront();
 
-		 if (Build.VERSION.SDK_INT < 19 ) {
-
-	       	if (parent!= null) {
-	       		parent.requestLayout();
-	       		parent.invalidate();	
-	       	}
-	     }
-
-		if ( (animationDurationIn > 0)  && (animationMode != 0) ) {
-			switch (animationMode) {
-				case 1: {
-					fadeInAnimation(this, animationDurationIn);
-					break;
-				}
-				case 2: {  //RightToLeft
-					slidefromRightToLeft(this, animationDurationIn);
-					break;
-				}
-				case 3: {  //RightToLeft
-					slidefromLeftToRight3(this, animationDurationIn);
-					break;
-				}
-
-			}
-		}
+		if ( (animationDurationIn > 0)  && (animationMode != 0) )
+			Animate( true, 0, 0 );				
 
 		if (animationMode == 0)
 			this.setVisibility(android.view.View.VISIBLE);
+	}
+	
+	// by ADiV
+	public void Animate( boolean animateIn, int _xFromTo, int _yFromTo ){
+		    if ( animationMode == 0 ) return;
+		    
+		    if( animateIn && (animationDurationIn > 0) )
+		    	switch (animationMode) {
+		    	 case 1: controls.fadeInAnimation(this, animationDurationIn); break; // Fade
+		    	 case 2: controls.slidefromRightToLeftIn(this, animationDurationIn); break; //RightToLeft
+		    	 case 3: controls.slidefromLeftToRightIn(this, animationDurationIn); break; //LeftToRight
+		    	 case 4: controls.slidefromTopToBottomIn(this, animationDurationIn); break; //TopToBottom
+		    	 case 5: controls.slidefromBottomToTopIn(this, animationDurationIn); break; //BottomToTop
+		    	 case 6: controls.slidefromMoveCustomIn(this, animationDurationIn, _xFromTo, _yFromTo); break; //MoveCustom
+		    	}
+		    
+		    if( !animateIn && (animationDurationOut > 0) )
+		    	switch (animationMode) {
+		    	 case 1: controls.fadeOutAnimation(this, animationDurationOut); break; // Fade
+		    	 case 2: controls.slidefromRightToLeftOut(this, animationDurationOut); break; //RightToLeft
+		    	 case 3: controls.slidefromLeftToRightOut(this, animationDurationOut); break; //LeftToRight
+		    	 case 4: controls.slidefromTopToBottomOut(this, animationDurationOut); break; //TopToBottom
+		    	 case 5: controls.slidefromBottomToTopOut(this, animationDurationOut); break; //BottomToTop
+		    	 case 6: controls.slidefromMoveCustomOut(this, animationDurationOut, _xFromTo, _yFromTo); break; //MoveCustom
+		    	}			
+	}
+	
+	public void AnimateRotate( int _angleFrom, int _angleTo ){
+		controls.animateRotate( this, animationDurationIn, _angleFrom, _angleTo );		
 	}
 
 	public void SetVisibilityGone() {
@@ -855,9 +908,9 @@ public class jImageView extends ImageView {
 		try {
 			fos = new FileOutputStream(_filename);
 			if (fos != null) {
-				if (_filename.toLowerCase().contains(".jpg"))
+				if (_filename.toLowerCase(Locale.US).contains(".jpg"))
 					image.compress(Bitmap.CompressFormat.JPEG, 90, fos);
-				if (_filename.toLowerCase().contains(".png"))
+				if (_filename.toLowerCase(Locale.US).contains(".png"))
 					image.compress(Bitmap.CompressFormat.PNG, 100, fos);
 
 				fos.close();
@@ -899,115 +952,6 @@ public class jImageView extends ImageView {
 	public void SetAnimationMode(int _animationMode) {
 		animationMode = _animationMode;
 	}
-
-	/// https://www.codexpedia.com/android/android-fade-in-and-fade-out-animation-programatically/
-	private void fadeInAnimation(final View view, int duration) {
-		Animation fadeIn = new AlphaAnimation(0, 1);
-		fadeIn.setInterpolator(new DecelerateInterpolator());
-		fadeIn.setDuration(duration);
-		fadeIn.setAnimationListener(new Animation.AnimationListener() {
-			@Override
-			public void onAnimationStart(Animation animation) {
-			}
-			@Override
-			public void onAnimationEnd(Animation animation) {
-				view.setVisibility(View.VISIBLE);
-			}
-			@Override
-			public void onAnimationRepeat(Animation animation) {
-			}
-		});
-
-		view.startAnimation(fadeIn);
-	}
-
-	private void fadeOutAnimation(final View view, int duration) {
-		Animation fadeOut = new AlphaAnimation(1, 0);
-		fadeOut.setInterpolator(new AccelerateInterpolator());
-		fadeOut.setStartOffset(duration);
-		fadeOut.setDuration(duration);
-		fadeOut.setAnimationListener(new Animation.AnimationListener() {
-			@Override
-			public void onAnimationStart(Animation animation) {
-			}
-			@Override
-			public void onAnimationEnd(Animation animation) {
-				view.setVisibility(View.INVISIBLE);
-			}
-			@Override
-			public void onAnimationRepeat(Animation animation) {
-			}
-		});
-		view.startAnimation(fadeOut);
-	}
-
-	//https://stackoverflow.com/questions/20696801/how-to-make-a-right-to-left-animation-in-a-layout/20696822
-	private void slidefromRightToLeft(View view, long duration) {
-		TranslateAnimation animate;
-		if (view.getHeight() == 0) {
-			//controls.appLayout.getHeight(); // parent layout
-			animate = new TranslateAnimation(controls.appLayout.getWidth(),
-					0, 0, 0); //(xFrom,xTo, yFrom,yTo)
-		} else {
-			animate = new TranslateAnimation(view.getWidth(),0, 0, 0); // View for animation
-		}
-		animate.setDuration(duration);
-		animate.setFillAfter(true);
-		view.startAnimation(animate);
-		view.setVisibility(View.VISIBLE); // Change visibility VISIBLE or GONE
-	}
-
-	private void slidefromLeftToRight(View view, long duration) {  //try
-
-		TranslateAnimation animate;  //(0.0f, 0.0f, 1500.0f, 0.0f);
-		if (view.getHeight() == 0) {
-			//controls.appLayout.getHeight(); // parent layout
-			animate = new TranslateAnimation(0,
-					controls.appLayout.getWidth(), 0, 0); //(xFrom,xTo, yFrom,yTo)
-		} else {
-			animate = new TranslateAnimation(0,view.getWidth(), 0, 0); // View for animation
-		}
-
-		animate.setDuration(duration);
-		animate.setFillAfter(true);
-		view.startAnimation(animate);
-		view.setVisibility(View.VISIBLE); // Change visibility VISIBLE or GONE
-	}
-
-
-	private void slidefromRightToLeft3(View view, long duration) {
-		TranslateAnimation animate;  //(0.0f, 0.0f, 1500.0f, 0.0f);
-		if (view.getHeight() == 0) {
-			//controls.appLayout.getHeight(); // parent layout
-			animate = new TranslateAnimation(0, -controls.appLayout.getWidth(),
-					0, 0); //(xFrom,xTo, yFrom,yTo)
-		} else {
-			animate = new TranslateAnimation(0,-controls.appLayout.getWidth(),
-					0, 0); // View for animation
-		}
-
-		animate.setDuration(duration);
-		animate.setFillAfter(true);
-		view.startAnimation(animate);
-		view.setVisibility(View.VISIBLE); // Change visibility VISIBLE or GONE
-	}
-
-	private void slidefromLeftToRight3(View view, long duration) {  //try
-		TranslateAnimation animate;  //(0.0f, 0.0f, 1500.0f, 0.0f);
-		if (view.getHeight() == 0) {
-			//controls.appLayout.getHeight(); // parent layout
-			animate = new TranslateAnimation(-controls.appLayout.getWidth(),
-					0, 0, 0); //(xFrom,xTo, yFrom,yTo)
-		} else {
-			animate = new TranslateAnimation(-controls.appLayout.getWidth(),0, 0, 0); // View for animation
-		}
-
-		animate.setDuration(duration);
-		animate.setFillAfter(true);
-		view.startAnimation(animate);
-		view.setVisibility(View.VISIBLE); // Change visibility VISIBLE or GONE
-	}
-
 
 	private Bitmap LoadFromAssets(String strName)
 	{
@@ -1064,6 +1008,49 @@ public class jImageView extends ImageView {
 		_imageAnimation.setOneShot(false);
 		_imageAnimation.setVisible(true, true);
 		_imageAnimation.start();
+	}
+	
+	public void ApplyDrawableXML(String _xmlIdentifier) {
+		this.setBackgroundResource(controls.GetDrawableResourceId(_xmlIdentifier));		
+    }
+	
+    //https://forum.lazarus.freepascal.org/index.php/topic,59281.0.html
+	public void SetClipToOutline(boolean _value) {   //thanks to Agmcz !
+		//[ifdef_api21up]
+		if(Build.VERSION.SDK_INT >= 21) this.setClipToOutline(_value);
+		//[endif_api21up]
+	}
+
+	//https://stackoverflow.com/questions/2459916/how-to-make-an-imageview-with-rounded-corners  [7]
+	public void SetRoundCorner(int _cornersRadius) {
+		final int cornersRadius = _cornersRadius;
+		ViewOutlineProvider provider;
+		if (android.os.Build.VERSION.SDK_INT >= 21) {
+			//[ifdef_api21up]
+			provider = new ViewOutlineProvider() {
+				@Override
+				public void getOutline(View view, Outline outline) {
+					outline.setRoundRect(0, 0, view.getWidth(), (view.getHeight()), cornersRadius);
+				}
+			};
+			this.setOutlineProvider(provider);
+			this.setClipToOutline(true);
+			//[endif_api21up]
+		}
+	}
+
+	public void SetRippleEffect() {
+		TypedValue typedValue = new TypedValue();
+		controls.activity.getTheme().resolveAttribute(android.R.attr.selectableItemBackground, typedValue, true);
+		int[] attrs = new int[]{android.R.attr.selectableItemBackground};
+		TypedArray typedArray = controls.activity.obtainStyledAttributes(typedValue.resourceId, attrs);
+		if (Build.VERSION.SDK_INT >= 23) {
+			//[ifdef_api23up]
+			this.setForeground(typedArray.getDrawable(0));
+	    	//[endif_api23up]
+		}
+		this.setClickable(true);
+		typedArray.recycle();
 	}
 
 }

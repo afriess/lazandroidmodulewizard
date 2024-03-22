@@ -1,4 +1,4 @@
-set Path=%PATH%;C:\android\sdk\platform-tools
-set GRADLE_HOME=C:\android\gradle-5.4.1\
+set Path=%PATH%;C:\Data\lamw_manager\LAMW\sdk\platform-tools
+set GRADLE_HOME=C:\Data\lazdev\HWAndroid\gradle-8.5\
 set PATH=%PATH%;%GRADLE_HOME%\bin
 gradle clean build --info

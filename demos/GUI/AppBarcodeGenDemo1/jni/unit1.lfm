@@ -21,10 +21,10 @@ object AndroidModule1: TAndroidModule1
     MarginRight = 5
     MarginBottom = 5
     Enabled = True
-    Left = 119
+    Left = 129
     Top = 5
-    Width = 81
-    Height = 26
+    Width = 61
+    Height = 20
     Visible = True
     PosRelativeToAnchor = []
     PosRelativeToParent = [rpTop, rpCenterHorizontal]
@@ -46,9 +46,9 @@ object AndroidModule1: TAndroidModule1
     MarginBottom = 5
     Enabled = True
     Left = 53
-    Top = 41
+    Top = 35
     Width = 213
-    Height = 57
+    Height = 50
     Visible = True
     Anchor = jTextView1
     PosRelativeToAnchor = [raBelow]
@@ -70,7 +70,7 @@ object AndroidModule1: TAndroidModule1
     MarginBottom = 0
     Enabled = True
     Left = 124
-    Top = 103
+    Top = 90
     Width = 72
     Height = 72
     Visible = True
@@ -84,6 +84,7 @@ object AndroidModule1: TAndroidModule1
     GravityInParent = lgNone
     RoundedShape = False
     AnimationDurationIn = 1500
+    AnimationDurationOut = 1500
     AnimationMode = animNone
   end
   object jButton2: jButton
@@ -93,9 +94,9 @@ object AndroidModule1: TAndroidModule1
     MarginBottom = 5
     Enabled = True
     Left = 53
-    Top = 198
+    Top = 201
     Width = 213
-    Height = 57
+    Height = 50
     Visible = True
     PosRelativeToAnchor = []
     PosRelativeToParent = [rpCenterInParent]
@@ -116,7 +117,7 @@ object AndroidModule1: TAndroidModule1
     MarginBottom = 0
     Enabled = True
     Left = 124
-    Top = 260
+    Top = 256
     Width = 72
     Height = 72
     Visible = True
@@ -130,6 +131,7 @@ object AndroidModule1: TAndroidModule1
     GravityInParent = lgNone
     RoundedShape = False
     AnimationDurationIn = 1500
+    AnimationDurationOut = 1500
     AnimationMode = animNone
   end
   object jImageView3: jImageView
@@ -139,7 +141,7 @@ object AndroidModule1: TAndroidModule1
     MarginBottom = 0
     Enabled = True
     Left = 124
-    Top = 382
+    Top = 378
     Width = 72
     Height = 72
     Visible = True
@@ -153,10 +155,21 @@ object AndroidModule1: TAndroidModule1
     GravityInParent = lgNone
     RoundedShape = False
     AnimationDurationIn = 1500
+    AnimationDurationOut = 1500
     AnimationMode = animNone
   end
   object jBarcodeGen1: jBarcodeGen
-    left = 53
-    top = 280
+    Left = 53
+    Top = 280
+  end
+  object ZXingBarcodeScan1: jcZXingBarcodeScan
+    Prompt = 'Scanning...'
+    CameraId = 0
+    BeepEnabled = False
+    OrientationLocked = False
+    BarcodeFormat = zxfQR_CODE
+    RequestCodeForResult = 49374
+    Left = 256
+    Top = 280
   end
 end

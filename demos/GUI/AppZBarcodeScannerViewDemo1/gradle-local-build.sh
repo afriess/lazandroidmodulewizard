@@ -1,5 +1,5 @@
-export PATH=/adt32/sdk/platform-tools:$PATH
-export GRADLE_HOME=/adt32/gradle-4.4.1/
+export PATH=/Data/lamw_manager/LAMW/sdk/platform-tools:$PATH
+export GRADLE_HOME=/Data/lazdev/HWAndroid/gradle-8.5/
 export PATH=$PATH:$GRADLE_HOME/bin
-source ~/.bashrc
+. ~/.bashrc
 gradle clean build --info

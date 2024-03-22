@@ -89,7 +89,15 @@ class ZBarCameraPreview extends SurfaceView implements SurfaceHolder.Callback {
 
     @Override
     public void surfaceDestroyed(SurfaceHolder holder) {
-        // Camera preview released in activity
+        // This is necessary to prevent buffer errors: the camera must stop before the view is being destroyed.
+        try {
+            mCamera.setPreviewCallback(null);
+            mCamera.stopPreview();
+            mCamera.release();
+            mCamera = null;
+        } catch (Exception e){
+            mCamera = null;
+        }
     }
 
     @Override
@@ -143,6 +151,10 @@ public class jZBarcodeScannerView extends FrameLayout {
     private boolean previewing = true;
 
     boolean initialized = false;
+
+    boolean isLighOn = false;
+
+    ///
     /*
     static {
         System.loadLibrary("iconv");
@@ -165,7 +177,7 @@ public class jZBarcodeScannerView extends FrameLayout {
                 if (enabled) {
                     if (initialized) {
                         //Log.i("onClickListener","onClickListener");
-                        controls.pOnClickGeneric(pascalObj, Const.Click_Default); //JNI event onClick!
+                        controls.pOnClickGeneric(pascalObj); //JNI event onClick!
                     }
                 }
             };
@@ -198,16 +210,22 @@ public class jZBarcodeScannerView extends FrameLayout {
 
     private void releaseCamera() {
         if (mCamera != null) {
+            // This is necessary to prevent errors: the camea might already be releasing in SurfaceDestroy
+            try {
             previewing = false;
             mCamera.setPreviewCallback(null);
+            mCamera.stopPreview();
             mCamera.release();
             mCamera = null;
+            } catch (Exception e){
+                mCamera = null;
+            }
         }
     }
 
     private Runnable doAutoFocus = new Runnable() {
         public void run() {
-            if (previewing)
+            if (previewing && (mCamera != null) )
                 mCamera.autoFocus(autoFocusCB);
         }
     };
@@ -315,10 +333,7 @@ public class jZBarcodeScannerView extends FrameLayout {
     }
 
     //GUIDELINE: please, preferentially, init all yours params names with "_", ex: int _flag, String _hello ...
-    public void SetId(int _id) { //wrapper method pattern ...
-        this.setId(_id);
-    }
-
+    
     private void ReScan() {
         if (barcodeScanned) {
             barcodeScanned = false;
@@ -332,6 +347,7 @@ public class jZBarcodeScannerView extends FrameLayout {
     }
 
     public void Scan(Bitmap _barcodeBmp) {
+        if (_barcodeBmp != null) {
         //Bitmap barcodeBmp = BitmapFactory.decodeResource(getResources(), R.drawable.barcode);
         int width = _barcodeBmp.getWidth();
         int height = _barcodeBmp.getHeight();
@@ -347,16 +363,60 @@ public class jZBarcodeScannerView extends FrameLayout {
             }
         }
     }
+    }
 
     public void Scan() {
         if (!initialized) {
             initialized =  true;
-            mCamera = getCameraInstance();
+
+            if (mCamera == null)
+                mCamera = getCameraInstance();
+
             mPreview = new ZBarCameraPreview(controls.activity, mCamera, previewCb, autoFocusCB);
             mPreview.setLayoutParams(new LinearLayout.LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT));
             this.addView(mPreview);
         }
         else ReScan();
+    }
+
+    public void StopScan() {
+        if (initialized) {
+           releaseCamera();
+           this.removeView(mPreview);
+           mPreview = null;
+           initialized = false;
+           previewing = true;
+           barcodeScanned = false;
+        }
+    }
+
+    //https://mkyong.com/android/how-to-turn-onoff-camera-ledflashlight-in-android/
+    public void SetFlashlight(boolean _flashlightMode){
+
+        if (mCamera == null)
+            mCamera = getCameraInstance();
+
+        if (this.mCamera != null) {
+
+            Camera.Parameters p = mCamera.getParameters();
+
+            if (_flashlightMode) {
+                if (!isLighOn) {
+                    p.setFlashMode(Camera.Parameters.FLASH_MODE_TORCH);
+                    mCamera.setParameters(p);
+                    mCamera.startPreview();
+                    isLighOn = true;
+                }
+            }
+            else  {
+                if (isLighOn) {
+                    p.setFlashMode(Camera.Parameters.FLASH_MODE_OFF);
+                    mCamera.setParameters(p);
+                    mCamera.startPreview();
+                    isLighOn = false;
+                }
+            }
+        }
     }
 
 }

@@ -1,25 +1,23 @@
 buildscript {
     repositories {
         mavenCentral()
-        //android plugin version >= 3.0.0 [in classpath] need gradle version >= 4.1 and google() method
         google()
     }
     dependencies {
-        classpath 'com.android.tools.build:gradle:4.1.3'
+        classpath 'com.android.tools.build:gradle:8.2.0' 
     }
 }
 allprojects {
     repositories {
+       jcenter()
        google()
        mavenCentral()
-       maven { url 'https://jitpack.io' }
+       maven {url 'https://jitpack.io'}
     }
 }
 apply plugin: 'com.android.application'
 android {
-    lintOptions {
-       abortOnError false
-    }
+    namespace "org.lamw.appjcenterzxingbarcodescandemo1"
     splits {
         abi {
             enable true
@@ -32,11 +30,11 @@ android {
         sourceCompatibility 1.8
         targetCompatibility 1.8
     }
-    compileSdkVersion 30
+    compileSdk 34
     defaultConfig {
             minSdkVersion 24
-            targetSdkVersion 30
-            versionCode 300677752
+            targetSdkVersion 34
+            versionCode 1
             versionName "1.0"
             multiDexEnabled true
             ndk { debugSymbolLevel 'FULL' }
@@ -50,7 +48,6 @@ android {
             renderscript.srcDirs = ['src']
             res.srcDirs = ['res']
             assets.srcDirs = ['assets']
-            jni.srcDirs = []
             jniLibs.srcDirs = ['libs']
         }
         debug.setRoot('build-types/debug')
@@ -68,13 +65,21 @@ android {
             jniDebuggable false
         }
     }
+    buildFeatures {
+        aidl true
+    }
+    lint {
+        abortOnError false
+    }
 }
 dependencies {
-    implementation fileTree(include: ['*.jar'], dir: 'libs')
-    implementation 'com.journeyapps:zxing-android-embedded:4.3.0'
+    implementation  fileTree(include: ['*.jar'], dir: 'libs')
+    implementation ('com.journeyapps:zxing-android-embedded:4.3.0') { transitive = false }
+    implementation 'androidx.core:core:1.9.0'
+    implementation 'androidx.multidex:multidex:2.0.1'
 }
- 
-task run(type: Exec, dependsOn: ':installDebug') {
+tasks.register('run', Exec) {
+ dependsOn ':installDebug'
 	if (System.properties['os.name'].toLowerCase().contains('windows')) {
 	    commandLine 'cmd', '/c', 'adb', 'shell', 'am', 'start', '-n', "org.lamw.appjcenterzxingbarcodescandemo1/.App"
 	} else {
@@ -83,6 +88,5 @@ task run(type: Exec, dependsOn: ':installDebug') {
 }
  
 wrapper {
-    gradleVersion = '6.6.1'
+    gradleVersion = '8.5' 
 }
-//how to use: look for "gradle_readme.txt"

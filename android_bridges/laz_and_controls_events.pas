@@ -301,6 +301,10 @@ uses
    procedure Java_Event_pOnArduinoAflakSerialMessageReceived(env:PJNIEnv;this:JObject;Sender:TObject;jbytesReceived:jbyteArray);
    procedure Java_Event_pOnArduinoAflakSerialOpened(env:PJNIEnv;this:JObject;Sender:TObject);
    procedure Java_Event_pOnArduinoAflakSerialStatusChanged(env:PJNIEnv;this:JObject;Sender:TObject;statusMessage:jString);
+   
+   // jcDatalogic
+   procedure Java_Event_pOnjcDatalogicDataArrived(env:PJNIEnv;this:JObject;Sender:TObject;msgContent:jString);
+
 
 implementation
 
@@ -318,7 +322,7 @@ uses
    ftpclient, cbluetoothspp, selectdirectorydialog, mssqljdbcconnection, customspeechtotext,
    cbillingclient, ctoytimerservice, bluetoothlowenergy,
    sfirebasepushnotificationlistener, batterymanager, modbus,
-   cwebsocketclient, uktoybutton, ujsarduinoaflakserial;
+   cwebsocketclient, uktoybutton, ujsarduinoaflakserial, ujcdatalogic;
 
 function GetString(env: PJNIEnv; jstr: JString): string;
 var
@@ -3225,5 +3229,15 @@ begin
   end;
 end;
 
+// jcDatalogic
+procedure Java_Event_pOnjcDatalogicDataArrived(env:PJNIEnv;this:JObject;Sender:TObject;msgContent:jString);
+begin
+  gApp.Jni.jEnv:= env;
+  gApp.Jni.jThis:= this;
+  if Sender is jcDatalogic then
+  begin
+    jcDatalogic(Sender).pOnjcDatalogicDataArrived(Sender,GetString(env,msgContent));
+  end;
+end;  
 
 end.

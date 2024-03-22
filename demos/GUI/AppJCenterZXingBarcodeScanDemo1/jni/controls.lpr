@@ -15,10 +15,10 @@ uses
 { Class:     org_lamw_appjcenterzxingbarcodescandemo1_Controls
   Method:    pAppOnCreate
   Signature: (Landroid/content/Context;Landroid/widget/RelativeLayout;Landroid/content/Intent;)V }
-procedure pAppOnCreate(PEnv: PJNIEnv; this: JObject; context: JObject; 
+procedure pAppOnCreate(PEnv: PJNIEnv; this: JObject; context: JObject;
   layout: JObject; intent: JObject); cdecl;
 begin
-  Java_Event_pAppOnCreate(PEnv, this, context, layout, intent); 
+  Java_Event_pAppOnCreate(PEnv, this, context, layout, intent);
     AndroidModule1.Reinit;
 end;
 
@@ -121,7 +121,7 @@ end;
 { Class:     org_lamw_appjcenterzxingbarcodescandemo1_Controls
   Method:    pAppOnActivityResult
   Signature: (IILandroid/content/Intent;)V }
-procedure pAppOnActivityResult(PEnv: PJNIEnv; this: JObject; requestCode: JInt; 
+procedure pAppOnActivityResult(PEnv: PJNIEnv; this: JObject; requestCode: JInt;
   resultCode: JInt; data: JObject); cdecl;
 begin
   Java_Event_pAppOnActivityResult(PEnv, this, requestCode, resultCode, data);
@@ -130,7 +130,7 @@ end;
 { Class:     org_lamw_appjcenterzxingbarcodescandemo1_Controls
   Method:    pAppOnCreateOptionsMenu
   Signature: (Landroid/view/Menu;)V }
-procedure pAppOnCreateOptionsMenu(PEnv: PJNIEnv; this: JObject; menu: JObject); 
+procedure pAppOnCreateOptionsMenu(PEnv: PJNIEnv; this: JObject; menu: JObject);
   cdecl;
 begin
   Java_Event_pAppOnCreateOptionsMenu(PEnv, this, menu);
@@ -139,18 +139,18 @@ end;
 { Class:     org_lamw_appjcenterzxingbarcodescandemo1_Controls
   Method:    pAppOnClickOptionMenuItem
   Signature: (Landroid/view/MenuItem;ILjava/lang/String;Z)V }
-procedure pAppOnClickOptionMenuItem(PEnv: PJNIEnv; this: JObject; 
-  menuItem: JObject; itemID: JInt; itemCaption: JString; checked: JBoolean); 
+procedure pAppOnClickOptionMenuItem(PEnv: PJNIEnv; this: JObject;
+  menuItem: JObject; itemID: JInt; itemCaption: JString; checked: JBoolean);
   cdecl;
 begin
-  Java_Event_pAppOnClickOptionMenuItem(PEnv, this, menuItem, itemID, 
+  Java_Event_pAppOnClickOptionMenuItem(PEnv, this, menuItem, itemID,
     itemCaption, checked);
 end;
 
 { Class:     org_lamw_appjcenterzxingbarcodescandemo1_Controls
   Method:    pAppOnPrepareOptionsMenu
   Signature: (Landroid/view/Menu;I)Z }
-function pAppOnPrepareOptionsMenu(PEnv: PJNIEnv; this: JObject; menu: JObject; 
+function pAppOnPrepareOptionsMenu(PEnv: PJNIEnv; this: JObject; menu: JObject;
   menuSize: JInt): JBoolean; cdecl;
 begin
   Result:=Java_Event_pAppOnPrepareOptionsMenu(PEnv, this, menu, menuSize);
@@ -159,17 +159,17 @@ end;
 { Class:     org_lamw_appjcenterzxingbarcodescandemo1_Controls
   Method:    pAppOnPrepareOptionsMenuItem
   Signature: (Landroid/view/Menu;Landroid/view/MenuItem;I)Z }
-function pAppOnPrepareOptionsMenuItem(PEnv: PJNIEnv; this: JObject; 
+function pAppOnPrepareOptionsMenuItem(PEnv: PJNIEnv; this: JObject;
   menu: JObject; menuItem: JObject; itemIndex: JInt): JBoolean; cdecl;
 begin
-  Result:=Java_Event_pAppOnPrepareOptionsMenuItem(PEnv, this, menu, menuItem, 
+  Result:=Java_Event_pAppOnPrepareOptionsMenuItem(PEnv, this, menu, menuItem,
     itemIndex);
 end;
 
 { Class:     org_lamw_appjcenterzxingbarcodescandemo1_Controls
   Method:    pAppOnCreateContextMenu
   Signature: (Landroid/view/ContextMenu;)V }
-procedure pAppOnCreateContextMenu(PEnv: PJNIEnv; this: JObject; menu: JObject); 
+procedure pAppOnCreateContextMenu(PEnv: PJNIEnv; this: JObject; menu: JObject);
   cdecl;
 begin
   Java_Event_pAppOnCreateContextMenu(PEnv, this, menu);
@@ -178,11 +178,11 @@ end;
 { Class:     org_lamw_appjcenterzxingbarcodescandemo1_Controls
   Method:    pAppOnClickContextMenuItem
   Signature: (Landroid/view/MenuItem;ILjava/lang/String;Z)V }
-procedure pAppOnClickContextMenuItem(PEnv: PJNIEnv; this: JObject; 
-  menuItem: JObject; itemID: JInt; itemCaption: JString; checked: JBoolean); 
+procedure pAppOnClickContextMenuItem(PEnv: PJNIEnv; this: JObject;
+  menuItem: JObject; itemID: JInt; itemCaption: JString; checked: JBoolean);
   cdecl;
 begin
-  Java_Event_pAppOnClickContextMenuItem(PEnv, this, menuItem, itemID, 
+  Java_Event_pAppOnClickContextMenuItem(PEnv, this, menuItem, itemID,
     itemCaption, checked);
 end;
 
@@ -197,7 +197,7 @@ end;
 { Class:     org_lamw_appjcenterzxingbarcodescandemo1_Controls
   Method:    pOnTouch
   Signature: (JIIFFFF)V }
-procedure pOnTouch(PEnv: PJNIEnv; this: JObject; pasobj: JLong; act: JInt; 
+procedure pOnTouch(PEnv: PJNIEnv; this: JObject; pasobj: JLong; act: JInt;
   cnt: JInt; x1: JFloat; y1: JFloat; x2: JFloat; y2: JFloat); cdecl;
 begin
   Java_Event_pOnTouch(PEnv, this, TObject(pasobj), act, cnt, x1, y1, x2, y2);
@@ -214,10 +214,10 @@ end;
 { Class:     org_lamw_appjcenterzxingbarcodescandemo1_Controls
   Method:    pAppOnSpecialKeyDown
   Signature: (CILjava/lang/String;)Z }
-function pAppOnSpecialKeyDown(PEnv: PJNIEnv; this: JObject; keyChar: JChar; 
+function pAppOnSpecialKeyDown(PEnv: PJNIEnv; this: JObject; keyChar: JChar;
   keyCode: JInt; keyCodeString: JString): JBoolean; cdecl;
 begin
-  Result:=Java_Event_pAppOnSpecialKeyDown(PEnv, this, keyChar, keyCode, 
+  Result:=Java_Event_pAppOnSpecialKeyDown(PEnv, this, keyChar, keyCode,
     keyCodeString);
 end;
 
@@ -240,7 +240,7 @@ end;
 { Class:     org_lamw_appjcenterzxingbarcodescandemo1_Controls
   Method:    pOnClick
   Signature: (JI)V }
-procedure pOnClick(PEnv: PJNIEnv; this: JObject; pasobj: JLong; value: JInt); 
+procedure pOnClick(PEnv: PJNIEnv; this: JObject; pasobj: JLong; value: JInt);
   cdecl;
 begin
   Java_Event_pOnClick(PEnv, this, TObject(pasobj), value);
@@ -265,7 +265,7 @@ end;
 { Class:     org_lamw_appjcenterzxingbarcodescandemo1_Controls
   Method:    pOnChange
   Signature: (JLjava/lang/String;I)V }
-procedure pOnChange(PEnv: PJNIEnv; this: JObject; pasobj: JLong; txt: JString; 
+procedure pOnChange(PEnv: PJNIEnv; this: JObject; pasobj: JLong; txt: JString;
   count: JInt); cdecl;
 begin
   Java_Event_pOnChange(PEnv, this, TObject(pasobj), txt, count);
@@ -274,7 +274,7 @@ end;
 { Class:     org_lamw_appjcenterzxingbarcodescandemo1_Controls
   Method:    pOnChanged
   Signature: (JLjava/lang/String;I)V }
-procedure pOnChanged(PEnv: PJNIEnv; this: JObject; pasobj: JLong; txt: JString; 
+procedure pOnChanged(PEnv: PJNIEnv; this: JObject; pasobj: JLong; txt: JString;
   count: JInt); cdecl;
 begin
   Java_Event_pOnChanged(PEnv, this, TObject(pasobj), txt, count);
@@ -297,6 +297,38 @@ begin
 end;
 
 { Class:     org_lamw_appjcenterzxingbarcodescandemo1_Controls
+  Method:    pOnDone
+  Signature: (J)V }
+procedure pOnDone(PEnv: PJNIEnv; this: JObject; pasobj: JLong); cdecl;
+begin
+  Java_Event_pOnDone(PEnv, this, TObject(pasobj));
+end;
+
+{ Class:     org_lamw_appjcenterzxingbarcodescandemo1_Controls
+  Method:    pOnSearch
+  Signature: (J)V }
+procedure pOnSearch(PEnv: PJNIEnv; this: JObject; pasobj: JLong); cdecl;
+begin
+  Java_Event_pOnSearch(PEnv, this, TObject(pasobj));
+end;
+
+{ Class:     org_lamw_appjcenterzxingbarcodescandemo1_Controls
+  Method:    pOnNext
+  Signature: (J)V }
+procedure pOnNext(PEnv: PJNIEnv; this: JObject; pasobj: JLong); cdecl;
+begin
+  Java_Event_pOnNext(PEnv, this, TObject(pasobj));
+end;
+
+{ Class:     org_lamw_appjcenterzxingbarcodescandemo1_Controls
+  Method:    pOnGo
+  Signature: (J)V }
+procedure pOnGo(PEnv: PJNIEnv; this: JObject; pasobj: JLong); cdecl;
+begin
+  Java_Event_pOnGo(PEnv, this, TObject(pasobj));
+end;
+
+{ Class:     org_lamw_appjcenterzxingbarcodescandemo1_Controls
   Method:    pOnClose
   Signature: (J)V }
 procedure pOnClose(PEnv: PJNIEnv; this: JObject; pasobj: JLong); cdecl;
@@ -316,7 +348,7 @@ end;
 { Class:     org_lamw_appjcenterzxingbarcodescandemo1_Controls
   Method:    pAppOnListItemClick
   Signature: (Landroid/widget/AdapterView;Landroid/view/View;II)V }
-procedure pAppOnListItemClick(PEnv: PJNIEnv; this: JObject; adapter: JObject; 
+procedure pAppOnListItemClick(PEnv: PJNIEnv; this: JObject; adapter: JObject;
   view: JObject; position: JInt; id: JInt); cdecl;
 begin
   Java_Event_pAppOnListItemClick(PEnv, this, adapter, view, position, id);
@@ -325,7 +357,7 @@ end;
 { Class:     org_lamw_appjcenterzxingbarcodescandemo1_Controls
   Method:    pOnFlingGestureDetected
   Signature: (JI)V }
-procedure pOnFlingGestureDetected(PEnv: PJNIEnv; this: JObject; pasobj: JLong; 
+procedure pOnFlingGestureDetected(PEnv: PJNIEnv; this: JObject; pasobj: JLong;
   direction: JInt); cdecl;
 begin
   Java_Event_pOnFlingGestureDetected(PEnv, this, TObject(pasobj), direction);
@@ -334,17 +366,17 @@ end;
 { Class:     org_lamw_appjcenterzxingbarcodescandemo1_Controls
   Method:    pOnPinchZoomGestureDetected
   Signature: (JFI)V }
-procedure pOnPinchZoomGestureDetected(PEnv: PJNIEnv; this: JObject; 
+procedure pOnPinchZoomGestureDetected(PEnv: PJNIEnv; this: JObject;
   pasobj: JLong; scaleFactor: JFloat; state: JInt); cdecl;
 begin
-  Java_Event_pOnPinchZoomGestureDetected(PEnv, this, TObject(pasobj), 
+  Java_Event_pOnPinchZoomGestureDetected(PEnv, this, TObject(pasobj),
     scaleFactor, state);
 end;
 
 { Class:     org_lamw_appjcenterzxingbarcodescandemo1_Controls
   Method:    pOnLostFocus
   Signature: (JLjava/lang/String;)V }
-procedure pOnLostFocus(PEnv: PJNIEnv; this: JObject; pasobj: JLong; 
+procedure pOnLostFocus(PEnv: PJNIEnv; this: JObject; pasobj: JLong;
   text: JString); cdecl;
 begin
   Java_Event_pOnLostFocus(PEnv, this, TObject(pasobj), text);
@@ -353,7 +385,7 @@ end;
 { Class:     org_lamw_appjcenterzxingbarcodescandemo1_Controls
   Method:    pOnFocus
   Signature: (JLjava/lang/String;)V }
-procedure pOnFocus(PEnv: PJNIEnv; this: JObject; pasobj: JLong; text: JString); 
+procedure pOnFocus(PEnv: PJNIEnv; this: JObject; pasobj: JLong; text: JString);
   cdecl;
 begin
   Java_Event_pOnFocus(PEnv, this, TObject(pasobj), text);
@@ -362,7 +394,7 @@ end;
 { Class:     org_lamw_appjcenterzxingbarcodescandemo1_Controls
   Method:    pOnBeforeDispatchDraw
   Signature: (JLandroid/graphics/Canvas;I)V }
-procedure pOnBeforeDispatchDraw(PEnv: PJNIEnv; this: JObject; pasobj: JLong; 
+procedure pOnBeforeDispatchDraw(PEnv: PJNIEnv; this: JObject; pasobj: JLong;
   canvas: JObject; tag: JInt); cdecl;
 begin
   Java_Event_pOnBeforeDispatchDraw(PEnv, this, TObject(pasobj), canvas, tag);
@@ -371,7 +403,7 @@ end;
 { Class:     org_lamw_appjcenterzxingbarcodescandemo1_Controls
   Method:    pOnAfterDispatchDraw
   Signature: (JLandroid/graphics/Canvas;I)V }
-procedure pOnAfterDispatchDraw(PEnv: PJNIEnv; this: JObject; pasobj: JLong; 
+procedure pOnAfterDispatchDraw(PEnv: PJNIEnv; this: JObject; pasobj: JLong;
   canvas: JObject; tag: JInt); cdecl;
 begin
   Java_Event_pOnAfterDispatchDraw(PEnv, this, TObject(pasobj), canvas, tag);
@@ -380,7 +412,7 @@ end;
 { Class:     org_lamw_appjcenterzxingbarcodescandemo1_Controls
   Method:    pOnLayouting
   Signature: (JZ)V }
-procedure pOnLayouting(PEnv: PJNIEnv; this: JObject; pasobj: JLong; 
+procedure pOnLayouting(PEnv: PJNIEnv; this: JObject; pasobj: JLong;
   changed: JBoolean); cdecl;
 begin
   Java_Event_pOnLayouting(PEnv, this, TObject(pasobj), changed);
@@ -389,23 +421,23 @@ end;
 { Class:     org_lamw_appjcenterzxingbarcodescandemo1_Controls
   Method:    pAppOnRequestPermissionResult
   Signature: (ILjava/lang/String;I)V }
-procedure pAppOnRequestPermissionResult(PEnv: PJNIEnv; this: JObject; 
+procedure pAppOnRequestPermissionResult(PEnv: PJNIEnv; this: JObject;
   requestCode: JInt; permission: JString; grantResult: JInt); cdecl;
 begin
-  Java_Event_pAppOnRequestPermissionResult(PEnv, this, requestCode, permission, 
+  Java_Event_pAppOnRequestPermissionResult(PEnv, this, requestCode, permission,
     grantResult);
 end;
 
 { Class:     org_lamw_appjcenterzxingbarcodescandemo1_Controls
   Method:    pOnRunOnUiThread
   Signature: (JI)V }
-procedure pOnRunOnUiThread(PEnv: PJNIEnv; this: JObject; pasobj: JLong; 
+procedure pOnRunOnUiThread(PEnv: PJNIEnv; this: JObject; pasobj: JLong;
   tag: JInt); cdecl;
 begin
   Java_Event_pOnRunOnUiThread(PEnv, this, TObject(pasobj), tag);
 end;
 
-const NativeMethods: array[0..44] of JNINativeMethod = (
+const NativeMethods: array[0..48] of JNINativeMethod = (
    (name: 'pAppOnCreate';
     signature: '(Landroid/content/Context;Landroid/widget/RelativeLayout;'
       +'Landroid/content/Intent;)V';
@@ -506,6 +538,18 @@ const NativeMethods: array[0..44] of JNINativeMethod = (
    (name: 'pOnBackPressed';
     signature: '(J)V';
     fnPtr: @pOnBackPressed; ),
+   (name: 'pOnDone';
+    signature: '(J)V';
+    fnPtr: @pOnDone; ),
+   (name: 'pOnSearch';
+    signature: '(J)V';
+    fnPtr: @pOnSearch; ),
+   (name: 'pOnNext';
+    signature: '(J)V';
+    fnPtr: @pOnNext; ),
+   (name: 'pOnGo';
+    signature: '(J)V';
+    fnPtr: @pOnGo; ),
    (name: 'pOnClose';
     signature: '(J)V';
     fnPtr: @pOnClose; ),
@@ -544,7 +588,7 @@ const NativeMethods: array[0..44] of JNINativeMethod = (
     fnPtr: @pOnRunOnUiThread; )
 );
 
-function RegisterNativeMethodsArray(PEnv: PJNIEnv; className: PChar; 
+function RegisterNativeMethodsArray(PEnv: PJNIEnv; className: PChar;
   methods: PJNINativeMethod; countMethods: integer): integer;
 var
   curClass: jClass;
@@ -569,13 +613,13 @@ var
 begin
   PEnv:= nil;
   Result:= JNI_VERSION_1_6;
-  
+
   if (VM^).GetEnv(VM, @PEnv, Result) <> JNI_OK then
   begin
    result := JNI_ERR;
    exit;
   end;
-  
+
   if PEnv <> nil then
   begin
      curEnv:= PJNIEnv(PEnv);
@@ -592,9 +636,9 @@ var
   curEnv: PJNIEnv;
 begin
   PEnv:= nil;
-  
+
   if (VM^).GetEnv(VM, @PEnv, JNI_VERSION_1_6) <> JNI_OK then exit;
-  
+
   if PEnv <> nil then
   begin
     curEnv:= PJNIEnv(PEnv);
@@ -672,6 +716,11 @@ exports
     +'pOnEnter',
   pOnBackPressed name 'Java_org_lamw_appjcenterzxingbarcodescandemo1_Controls_'
     +'pOnBackPressed',
+  pOnDone name 'Java_org_lamw_appjcenterzxingbarcodescandemo1_Controls_pOnDone',
+  pOnSearch name 'Java_org_lamw_appjcenterzxingbarcodescandemo1_Controls_'
+    +'pOnSearch',
+  pOnNext name 'Java_org_lamw_appjcenterzxingbarcodescandemo1_Controls_pOnNext',
+  pOnGo name 'Java_org_lamw_appjcenterzxingbarcodescandemo1_Controls_pOnGo',
   pOnClose name 'Java_org_lamw_appjcenterzxingbarcodescandemo1_Controls_'
     +'pOnClose',
   pAppOnViewClick name 'Java_org_lamw_appjcenterzxingbarcodescandemo1_Controls'

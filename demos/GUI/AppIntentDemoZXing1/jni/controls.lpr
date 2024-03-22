@@ -16,7 +16,7 @@ procedure pAppOnCreate(PEnv: PJNIEnv; this: JObject; context: JObject;
   layout: JObject; intent: JObject); cdecl;
 begin
   Java_Event_pAppOnCreate(PEnv, this, context, layout, intent);
-    AndroidModule1.Init(gApp);
+    AndroidModule1.Reinit;
 end;
 
 { Class:     com_example_appintentdemozxing1_Controls
@@ -97,6 +97,14 @@ end;
 function pAppOnRotate(PEnv: PJNIEnv; this: JObject; rotate: JInt): JInt; cdecl;
 begin
   Result:=Java_Event_pAppOnRotate(PEnv, this, rotate);
+end;
+
+{ Class:     com_example_appintentdemozxing1_Controls
+  Method:    pAppOnUpdateLayout
+  Signature: ()V }
+procedure pAppOnUpdateLayout(PEnv: PJNIEnv; this: JObject); cdecl;
+begin
+  Java_Event_pAppOnUpdateLayout(PEnv, this);
 end;
 
 { Class:     com_example_appintentdemozxing1_Controls
@@ -194,11 +202,10 @@ end;
 
 { Class:     com_example_appintentdemozxing1_Controls
   Method:    pOnClickGeneric
-  Signature: (JI)V }
-procedure pOnClickGeneric(PEnv: PJNIEnv; this: JObject; pasobj: JLong;
-  value: JInt); cdecl;
+  Signature: (J)V }
+procedure pOnClickGeneric(PEnv: PJNIEnv; this: JObject; pasobj: JLong); cdecl;
 begin
-  Java_Event_pOnClickGeneric(PEnv, this, TObject(pasobj), value);
+  Java_Event_pOnClickGeneric(PEnv, this, TObject(pasobj));
 end;
 
 { Class:     com_example_appintentdemozxing1_Controls
@@ -213,11 +220,18 @@ end;
 
 { Class:     com_example_appintentdemozxing1_Controls
   Method:    pOnDown
-  Signature: (JI)V }
-procedure pOnDown(PEnv: PJNIEnv; this: JObject; pasobj: JLong; value: JInt);
-  cdecl;
+  Signature: (J)V }
+procedure pOnDown(PEnv: PJNIEnv; this: JObject; pasobj: JLong); cdecl;
 begin
-  Java_Event_pOnDown(PEnv, this, TObject(pasobj), value);
+  Java_Event_pOnDown(PEnv, this, TObject(pasobj));
+end;
+
+{ Class:     com_example_appintentdemozxing1_Controls
+  Method:    pOnUp
+  Signature: (J)V }
+procedure pOnUp(PEnv: PJNIEnv; this: JObject; pasobj: JLong); cdecl;
+begin
+  Java_Event_pOnUp(PEnv, this, TObject(pasobj));
 end;
 
 { Class:     com_example_appintentdemozxing1_Controls
@@ -231,20 +245,18 @@ end;
 
 { Class:     com_example_appintentdemozxing1_Controls
   Method:    pOnLongClick
-  Signature: (JI)V }
-procedure pOnLongClick(PEnv: PJNIEnv; this: JObject; pasobj: JLong; value: JInt
-  ); cdecl;
+  Signature: (J)V }
+procedure pOnLongClick(PEnv: PJNIEnv; this: JObject; pasobj: JLong); cdecl;
 begin
-  Java_Event_pOnLongClick(PEnv, this, TObject(pasobj), value);
+  Java_Event_pOnLongClick(PEnv, this, TObject(pasobj));
 end;
 
 { Class:     com_example_appintentdemozxing1_Controls
   Method:    pOnDoubleClick
-  Signature: (JI)V }
-procedure pOnDoubleClick(PEnv: PJNIEnv; this: JObject; pasobj: JLong;
-  value: JInt); cdecl;
+  Signature: (J)V }
+procedure pOnDoubleClick(PEnv: PJNIEnv; this: JObject; pasobj: JLong); cdecl;
 begin
-  Java_Event_pOnDoubleClick(PEnv, this, TObject(pasobj), value);
+  Java_Event_pOnDoubleClick(PEnv, this, TObject(pasobj));
 end;
 
 { Class:     com_example_appintentdemozxing1_Controls
@@ -271,6 +283,46 @@ end;
 procedure pOnEnter(PEnv: PJNIEnv; this: JObject; pasobj: JLong); cdecl;
 begin
   Java_Event_pOnEnter(PEnv, this, TObject(pasobj));
+end;
+
+{ Class:     com_example_appintentdemozxing1_Controls
+  Method:    pOnBackPressed
+  Signature: (J)V }
+procedure pOnBackPressed(PEnv: PJNIEnv; this: JObject; pasobj: JLong); cdecl;
+begin
+  Java_Event_pOnBackPressed(PEnv, this, TObject(pasobj));
+end;
+
+{ Class:     com_example_appintentdemozxing1_Controls
+  Method:    pOnDone
+  Signature: (J)V }
+procedure pOnDone(PEnv: PJNIEnv; this: JObject; pasobj: JLong); cdecl;
+begin
+  Java_Event_pOnDone(PEnv, this, TObject(pasobj));
+end;
+
+{ Class:     com_example_appintentdemozxing1_Controls
+  Method:    pOnSearch
+  Signature: (J)V }
+procedure pOnSearch(PEnv: PJNIEnv; this: JObject; pasobj: JLong); cdecl;
+begin
+  Java_Event_pOnSearch(PEnv, this, TObject(pasobj));
+end;
+
+{ Class:     com_example_appintentdemozxing1_Controls
+  Method:    pOnNext
+  Signature: (J)V }
+procedure pOnNext(PEnv: PJNIEnv; this: JObject; pasobj: JLong); cdecl;
+begin
+  Java_Event_pOnNext(PEnv, this, TObject(pasobj));
+end;
+
+{ Class:     com_example_appintentdemozxing1_Controls
+  Method:    pOnGo
+  Signature: (J)V }
+procedure pOnGo(PEnv: PJNIEnv; this: JObject; pasobj: JLong); cdecl;
+begin
+  Java_Event_pOnGo(PEnv, this, TObject(pasobj));
 end;
 
 { Class:     com_example_appintentdemozxing1_Controls
@@ -328,6 +380,15 @@ begin
 end;
 
 { Class:     com_example_appintentdemozxing1_Controls
+  Method:    pOnFocus
+  Signature: (JLjava/lang/String;)V }
+procedure pOnFocus(PEnv: PJNIEnv; this: JObject; pasobj: JLong; text: JString);
+  cdecl;
+begin
+  Java_Event_pOnFocus(PEnv, this, TObject(pasobj), text);
+end;
+
+{ Class:     com_example_appintentdemozxing1_Controls
   Method:    pOnBeforeDispatchDraw
   Signature: (JLandroid/graphics/Canvas;I)V }
 procedure pOnBeforeDispatchDraw(PEnv: PJNIEnv; this: JObject; pasobj: JLong;
@@ -365,12 +426,30 @@ begin
 end;
 
 { Class:     com_example_appintentdemozxing1_Controls
+  Method:    pOnRunOnUiThread
+  Signature: (JI)V }
+procedure pOnRunOnUiThread(PEnv: PJNIEnv; this: JObject; pasobj: JLong;
+  tag: JInt); cdecl;
+begin
+  Java_Event_pOnRunOnUiThread(PEnv, this, TObject(pasobj), tag);
+end;
+
+{ Class:     com_example_appintentdemozxing1_Controls
   Method:    pOnClickWidgetItem
   Signature: (JIZ)V }
 procedure pOnClickWidgetItem(PEnv: PJNIEnv; this: JObject; pasobj: JLong;
   position: JInt; checked: JBoolean); cdecl;
 begin
   Java_Event_pOnClickWidgetItem(PEnv, this, TObject(pasobj), position, checked);
+end;
+
+{ Class:     com_example_appintentdemozxing1_Controls
+  Method:    pOnClickImageItem
+  Signature: (JI)V }
+procedure pOnClickImageItem(PEnv: PJNIEnv; this: JObject; pasobj: JLong;
+  position: JInt); cdecl;
+begin
+  Java_Event_pOnClickImageItem(PEnv, this, TObject(pasobj), position);
 end;
 
 { Class:     com_example_appintentdemozxing1_Controls
@@ -381,6 +460,36 @@ procedure pOnClickCaptionItem(PEnv: PJNIEnv; this: JObject; pasobj: JLong;
 begin
   Java_Event_pOnClickCaptionItem(PEnv, this, TObject(pasobj), position, caption
     );
+end;
+
+{ Class:     com_example_appintentdemozxing1_Controls
+  Method:    pOnClickItemTextLeft
+  Signature: (JILjava/lang/String;)V }
+procedure pOnClickItemTextLeft(PEnv: PJNIEnv; this: JObject; pasobj: JLong;
+  position: JInt; caption: JString); cdecl;
+begin
+  Java_Event_pOnClickItemTextLeft(PEnv, this, TObject(pasobj), position, caption
+    );
+end;
+
+{ Class:     com_example_appintentdemozxing1_Controls
+  Method:    pOnClickItemTextCenter
+  Signature: (JILjava/lang/String;)V }
+procedure pOnClickItemTextCenter(PEnv: PJNIEnv; this: JObject; pasobj: JLong;
+  position: JInt; caption: JString); cdecl;
+begin
+  Java_Event_pOnClickItemTextCenter(PEnv, this, TObject(pasobj), position,
+    caption);
+end;
+
+{ Class:     com_example_appintentdemozxing1_Controls
+  Method:    pOnClickItemTextRight
+  Signature: (JILjava/lang/String;)V }
+procedure pOnClickItemTextRight(PEnv: PJNIEnv; this: JObject; pasobj: JLong;
+  position: JInt; caption: JString); cdecl;
+begin
+  Java_Event_pOnClickItemTextRight(PEnv, this, TObject(pasobj), position,
+    caption);
 end;
 
 { Class:     com_example_appintentdemozxing1_Controls
@@ -401,6 +510,26 @@ function pOnListViewDrawItemCaptionColor(PEnv: PJNIEnv; this: JObject;
 begin
   Result:=Java_Event_pOnListViewDrawItemCaptionColor(PEnv, this, TObject(pasobj
     ), position, caption);
+end;
+
+{ Class:     com_example_appintentdemozxing1_Controls
+  Method:    pOnListViewDrawItemCustomFont
+  Signature: (JILjava/lang/String;)Ljava/lang/String; }
+function pOnListViewDrawItemCustomFont(PEnv: PJNIEnv; this: JObject;
+  pasobj: JLong; position: JInt; caption: JString): JString; cdecl;
+begin
+  Result:=Java_Event_pOnListViewDrawItemCustomFont(PEnv, this, TObject(pasobj),
+    position, caption);
+end;
+
+{ Class:     com_example_appintentdemozxing1_Controls
+  Method:    pOnListViewDrawItemBackgroundColor
+  Signature: (JI)I }
+function pOnListViewDrawItemBackgroundColor(PEnv: PJNIEnv; this: JObject;
+  pasobj: JLong; position: JInt): JInt; cdecl;
+begin
+  Result:=Java_Event_pOnListViewDrawItemBackgroundColor(PEnv, this, TObject(
+    pasobj), position);
 end;
 
 { Class:     com_example_appintentdemozxing1_Controls
@@ -445,6 +574,16 @@ begin
 end;
 
 { Class:     com_example_appintentdemozxing1_Controls
+  Method:    pOnListViewDrawItemWidgetText
+  Signature: (JILjava/lang/String;)Ljava/lang/String; }
+function pOnListViewDrawItemWidgetText(PEnv: PJNIEnv; this: JObject;
+  pasobj: JLong; position: JInt; widgetText: JString): JString; cdecl;
+begin
+  Result:=Java_Event_pOnListViewDrawItemWidgetText(PEnv, this, TObject(pasobj),
+    position, widgetText);
+end;
+
+{ Class:     com_example_appintentdemozxing1_Controls
   Method:    pOnListViewDrawItemWidgetImage
   Signature: (JILjava/lang/String;)Landroid/graphics/Bitmap; }
 function pOnListViewDrawItemWidgetImage(PEnv: PJNIEnv; this: JObject;
@@ -454,7 +593,7 @@ begin
     ), position, widgetText);
 end;
 
-const NativeMethods: array[0..48] of JNINativeMethod = (
+const NativeMethods: array[0..64] of JNINativeMethod = (
    (name: 'pAppOnCreate';
     signature: '(Landroid/content/Context;Landroid/widget/RelativeLayout;'
       +'Landroid/content/Intent;)V';
@@ -489,6 +628,9 @@ const NativeMethods: array[0..48] of JNINativeMethod = (
    (name: 'pAppOnRotate';
     signature: '(I)I';
     fnPtr: @pAppOnRotate; ),
+   (name: 'pAppOnUpdateLayout';
+    signature: '()V';
+    fnPtr: @pAppOnUpdateLayout; ),
    (name: 'pAppOnConfigurationChanged';
     signature: '()V';
     fnPtr: @pAppOnConfigurationChanged; ),
@@ -520,22 +662,25 @@ const NativeMethods: array[0..48] of JNINativeMethod = (
     signature: '(JIIFFFF)V';
     fnPtr: @pOnTouch; ),
    (name: 'pOnClickGeneric';
-    signature: '(JI)V';
+    signature: '(J)V';
     fnPtr: @pOnClickGeneric; ),
    (name: 'pAppOnSpecialKeyDown';
     signature: '(CILjava/lang/String;)Z';
     fnPtr: @pAppOnSpecialKeyDown; ),
    (name: 'pOnDown';
-    signature: '(JI)V';
+    signature: '(J)V';
     fnPtr: @pOnDown; ),
+   (name: 'pOnUp';
+    signature: '(J)V';
+    fnPtr: @pOnUp; ),
    (name: 'pOnClick';
     signature: '(JI)V';
     fnPtr: @pOnClick; ),
    (name: 'pOnLongClick';
-    signature: '(JI)V';
+    signature: '(J)V';
     fnPtr: @pOnLongClick; ),
    (name: 'pOnDoubleClick';
-    signature: '(JI)V';
+    signature: '(J)V';
     fnPtr: @pOnDoubleClick; ),
    (name: 'pOnChange';
     signature: '(JLjava/lang/String;I)V';
@@ -546,6 +691,21 @@ const NativeMethods: array[0..48] of JNINativeMethod = (
    (name: 'pOnEnter';
     signature: '(J)V';
     fnPtr: @pOnEnter; ),
+   (name: 'pOnBackPressed';
+    signature: '(J)V';
+    fnPtr: @pOnBackPressed; ),
+   (name: 'pOnDone';
+    signature: '(J)V';
+    fnPtr: @pOnDone; ),
+   (name: 'pOnSearch';
+    signature: '(J)V';
+    fnPtr: @pOnSearch; ),
+   (name: 'pOnNext';
+    signature: '(J)V';
+    fnPtr: @pOnNext; ),
+   (name: 'pOnGo';
+    signature: '(J)V';
+    fnPtr: @pOnGo; ),
    (name: 'pOnClose';
     signature: '(J)V';
     fnPtr: @pOnClose; ),
@@ -564,6 +724,9 @@ const NativeMethods: array[0..48] of JNINativeMethod = (
    (name: 'pOnLostFocus';
     signature: '(JLjava/lang/String;)V';
     fnPtr: @pOnLostFocus; ),
+   (name: 'pOnFocus';
+    signature: '(JLjava/lang/String;)V';
+    fnPtr: @pOnFocus; ),
    (name: 'pOnBeforeDispatchDraw';
     signature: '(JLandroid/graphics/Canvas;I)V';
     fnPtr: @pOnBeforeDispatchDraw; ),
@@ -576,18 +739,39 @@ const NativeMethods: array[0..48] of JNINativeMethod = (
    (name: 'pAppOnRequestPermissionResult';
     signature: '(ILjava/lang/String;I)V';
     fnPtr: @pAppOnRequestPermissionResult; ),
+   (name: 'pOnRunOnUiThread';
+    signature: '(JI)V';
+    fnPtr: @pOnRunOnUiThread; ),
    (name: 'pOnClickWidgetItem';
     signature: '(JIZ)V';
     fnPtr: @pOnClickWidgetItem; ),
+   (name: 'pOnClickImageItem';
+    signature: '(JI)V';
+    fnPtr: @pOnClickImageItem; ),
    (name: 'pOnClickCaptionItem';
     signature: '(JILjava/lang/String;)V';
     fnPtr: @pOnClickCaptionItem; ),
+   (name: 'pOnClickItemTextLeft';
+    signature: '(JILjava/lang/String;)V';
+    fnPtr: @pOnClickItemTextLeft; ),
+   (name: 'pOnClickItemTextCenter';
+    signature: '(JILjava/lang/String;)V';
+    fnPtr: @pOnClickItemTextCenter; ),
+   (name: 'pOnClickItemTextRight';
+    signature: '(JILjava/lang/String;)V';
+    fnPtr: @pOnClickItemTextRight; ),
    (name: 'pOnListViewLongClickCaptionItem';
     signature: '(JILjava/lang/String;)V';
     fnPtr: @pOnListViewLongClickCaptionItem; ),
    (name: 'pOnListViewDrawItemCaptionColor';
     signature: '(JILjava/lang/String;)I';
     fnPtr: @pOnListViewDrawItemCaptionColor; ),
+   (name: 'pOnListViewDrawItemCustomFont';
+    signature: '(JILjava/lang/String;)Ljava/lang/String;';
+    fnPtr: @pOnListViewDrawItemCustomFont; ),
+   (name: 'pOnListViewDrawItemBackgroundColor';
+    signature: '(JI)I';
+    fnPtr: @pOnListViewDrawItemBackgroundColor; ),
    (name: 'pOnListViewDrawItemBitmap';
     signature: '(JILjava/lang/String;)Landroid/graphics/Bitmap;';
     fnPtr: @pOnListViewDrawItemBitmap; ),
@@ -600,6 +784,9 @@ const NativeMethods: array[0..48] of JNINativeMethod = (
    (name: 'pOnListViewDrawItemWidgetTextColor';
     signature: '(JILjava/lang/String;)I';
     fnPtr: @pOnListViewDrawItemWidgetTextColor; ),
+   (name: 'pOnListViewDrawItemWidgetText';
+    signature: '(JILjava/lang/String;)Ljava/lang/String;';
+    fnPtr: @pOnListViewDrawItemWidgetText; ),
    (name: 'pOnListViewDrawItemWidgetImage';
     signature: '(JILjava/lang/String;)Landroid/graphics/Bitmap;';
     fnPtr: @pOnListViewDrawItemWidgetImage; )
@@ -613,10 +800,7 @@ begin
   Result:= JNI_FALSE;
   curClass:= (PEnv^).FindClass(PEnv, className);
   if curClass <> nil then
-  begin
-    if (PEnv^).RegisterNatives(PEnv, curClass, methods, countMethods) > 0
-      then Result:= JNI_TRUE;
-  end;
+    result := (PEnv^).RegisterNatives(PEnv, curClass, methods, countMethods);
 end;
 
 function RegisterNativeMethods(PEnv: PJNIEnv; className: PChar): integer;
@@ -629,14 +813,23 @@ function JNI_OnLoad(VM: PJavaVM; {%H-}reserved: pointer): JInt; cdecl;
 var
   PEnv: PPointer;
   curEnv: PJNIEnv;
+  rc: integer;
 begin
   PEnv:= nil;
   Result:= JNI_VERSION_1_6;
-  (VM^).GetEnv(VM, @PEnv, Result);
+
+  if (VM^).GetEnv(VM, @PEnv, Result) <> JNI_OK then
+  begin
+   result := JNI_ERR;
+   exit;
+  end;
+
   if PEnv <> nil then
   begin
      curEnv:= PJNIEnv(PEnv);
-     RegisterNativeMethods(curEnv, 'com/example/appintentdemozxing1/Controls');
+     rc := RegisterNativeMethods(curEnv, 'com/example/appintentdemozxing1/'
+       +'Controls');
+     if (rc <> JNI_OK) then result := rc;
   end;
   gVM:= VM; {AndroidWidget.pas}
 end;
@@ -647,7 +840,9 @@ var
   curEnv: PJNIEnv;
 begin
   PEnv:= nil;
-  (VM^).GetEnv(VM, @PEnv, JNI_VERSION_1_6);
+
+  if (VM^).GetEnv(VM, @PEnv, JNI_VERSION_1_6) <> JNI_OK then exit;
+
   if PEnv <> nil then
   begin
     curEnv:= PJNIEnv(PEnv);
@@ -681,6 +876,8 @@ exports
     +'pAppOnBackPressed',
   pAppOnRotate name
     'Java_com_example_appintentdemozxing1_Controls_pAppOnRotate',
+  pAppOnUpdateLayout name 'Java_com_example_appintentdemozxing1_Controls_'
+    +'pAppOnUpdateLayout',
   pAppOnConfigurationChanged name 'Java_com_example_appintentdemozxing1_'
     +'Controls_pAppOnConfigurationChanged',
   pAppOnActivityResult name 'Java_com_example_appintentdemozxing1_Controls_'
@@ -704,6 +901,7 @@ exports
   pAppOnSpecialKeyDown name 'Java_com_example_appintentdemozxing1_Controls_'
     +'pAppOnSpecialKeyDown',
   pOnDown name 'Java_com_example_appintentdemozxing1_Controls_pOnDown',
+  pOnUp name 'Java_com_example_appintentdemozxing1_Controls_pOnUp',
   pOnClick name 'Java_com_example_appintentdemozxing1_Controls_pOnClick',
   pOnLongClick name
     'Java_com_example_appintentdemozxing1_Controls_pOnLongClick',
@@ -712,6 +910,12 @@ exports
   pOnChange name 'Java_com_example_appintentdemozxing1_Controls_pOnChange',
   pOnChanged name 'Java_com_example_appintentdemozxing1_Controls_pOnChanged',
   pOnEnter name 'Java_com_example_appintentdemozxing1_Controls_pOnEnter',
+  pOnBackPressed name 'Java_com_example_appintentdemozxing1_Controls_'
+    +'pOnBackPressed',
+  pOnDone name 'Java_com_example_appintentdemozxing1_Controls_pOnDone',
+  pOnSearch name 'Java_com_example_appintentdemozxing1_Controls_pOnSearch',
+  pOnNext name 'Java_com_example_appintentdemozxing1_Controls_pOnNext',
+  pOnGo name 'Java_com_example_appintentdemozxing1_Controls_pOnGo',
   pOnClose name 'Java_com_example_appintentdemozxing1_Controls_pOnClose',
   pAppOnViewClick name 'Java_com_example_appintentdemozxing1_Controls_'
     +'pAppOnViewClick',
@@ -723,6 +927,7 @@ exports
     +'Controls_pOnPinchZoomGestureDetected',
   pOnLostFocus name
     'Java_com_example_appintentdemozxing1_Controls_pOnLostFocus',
+  pOnFocus name 'Java_com_example_appintentdemozxing1_Controls_pOnFocus',
   pOnBeforeDispatchDraw name 'Java_com_example_appintentdemozxing1_Controls_'
     +'pOnBeforeDispatchDraw',
   pOnAfterDispatchDraw name 'Java_com_example_appintentdemozxing1_Controls_'
@@ -731,14 +936,28 @@ exports
     'Java_com_example_appintentdemozxing1_Controls_pOnLayouting',
   pAppOnRequestPermissionResult name 'Java_com_example_appintentdemozxing1_'
     +'Controls_pAppOnRequestPermissionResult',
+  pOnRunOnUiThread name 'Java_com_example_appintentdemozxing1_Controls_'
+    +'pOnRunOnUiThread',
   pOnClickWidgetItem name 'Java_com_example_appintentdemozxing1_Controls_'
     +'pOnClickWidgetItem',
+  pOnClickImageItem name 'Java_com_example_appintentdemozxing1_Controls_'
+    +'pOnClickImageItem',
   pOnClickCaptionItem name 'Java_com_example_appintentdemozxing1_Controls_'
     +'pOnClickCaptionItem',
+  pOnClickItemTextLeft name 'Java_com_example_appintentdemozxing1_Controls_'
+    +'pOnClickItemTextLeft',
+  pOnClickItemTextCenter name 'Java_com_example_appintentdemozxing1_Controls_'
+    +'pOnClickItemTextCenter',
+  pOnClickItemTextRight name 'Java_com_example_appintentdemozxing1_Controls_'
+    +'pOnClickItemTextRight',
   pOnListViewLongClickCaptionItem name 'Java_com_example_appintentdemozxing1_'
     +'Controls_pOnListViewLongClickCaptionItem',
   pOnListViewDrawItemCaptionColor name 'Java_com_example_appintentdemozxing1_'
     +'Controls_pOnListViewDrawItemCaptionColor',
+  pOnListViewDrawItemCustomFont name 'Java_com_example_appintentdemozxing1_'
+    +'Controls_pOnListViewDrawItemCustomFont',
+  pOnListViewDrawItemBackgroundColor name 'Java_com_example_appintentdemozxing'
+    +'1_Controls_pOnListViewDrawItemBackgroundColor',
   pOnListViewDrawItemBitmap name 'Java_com_example_appintentdemozxing1_'
     +'Controls_pOnListViewDrawItemBitmap',
   pOnWidgeItemLostFocus name 'Java_com_example_appintentdemozxing1_Controls_'
@@ -747,6 +966,8 @@ exports
     +'Controls_pOnListViewScrollStateChanged',
   pOnListViewDrawItemWidgetTextColor name 'Java_com_example_appintentdemozxing'
     +'1_Controls_pOnListViewDrawItemWidgetTextColor',
+  pOnListViewDrawItemWidgetText name 'Java_com_example_appintentdemozxing1_'
+    +'Controls_pOnListViewDrawItemWidgetText',
   pOnListViewDrawItemWidgetImage name 'Java_com_example_appintentdemozxing1_'
     +'Controls_pOnListViewDrawItemWidgetImage';
 

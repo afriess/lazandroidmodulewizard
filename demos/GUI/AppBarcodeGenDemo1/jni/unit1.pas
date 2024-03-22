@@ -9,7 +9,8 @@ uses
   {$IFDEF UNIX}{$IFDEF UseCThreads}
   cthreads,
   {$ENDIF}{$ENDIF}
-  Classes, SysUtils, AndroidWidget, Laz_And_Controls, barcodegen;
+  Classes, SysUtils, AndroidWidget, Laz_And_Controls, barcodegen,
+  ujczxingbarcodescan;
   
 type
 
@@ -23,6 +24,7 @@ type
     jImageView2: jImageView;
     jImageView3: jImageView;
     jTextView1: jTextView;
+    ZXingBarcodeScan1: jcZXingBarcodeScan;
     procedure jButton1Click(Sender: TObject);
     procedure jButton2Click(Sender: TObject);
   private
@@ -47,7 +49,7 @@ var
   //str64: string;
 begin
 
-  bar128:= jBarcodeGen1.GetCode128Bar('Hello World  150x150!', 150,150);
+  bar128:= jBarcodeGen1.Get128Bar('Hello World  150x150!', 150,150);
   jImageView1.SetImage(bar128);
 
   //Save
@@ -67,11 +69,11 @@ var
 begin
   data_12Digits:= '007567816412';  //12 digits [data] ref. http://www.barcodeisland.com/ean13.phtml
   checksum_1digit:= jBarcodeGen1.GetEAN13Checksum(data_12Digits);
-  jImageView2.SetImage(jBarcodeGen1.GetBar1D(fmEAN_13, data_12Digits + checksum_1digit, 150,150));
+  jImageView2.SetImage(jBarcodeGen1.GetBar1D(ord(fmEAN_13), data_12Digits + checksum_1digit, 150,150));
 
   data_7Digits:= '5512345';  //7 digits [data] ref. http://www.barcodeisland.com/ean8.phtml
   checksum_1digit:= jBarcodeGen1.GetEAN8Checksum(data_7Digits);
-  jImageView3.SetImage(jBarcodeGen1.GetBar1D(fmEAN_8, data_7Digits + checksum_1digit, 150,150));
+  jImageView3.SetImage(jBarcodeGen1.GetBar1D(ord(fmEAN_8), data_7Digits + checksum_1digit, 150,150));
 end;
 
 end.

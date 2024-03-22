@@ -6,7 +6,7 @@ unit unit1;
 interface
  
 uses
-  Classes, SysUtils, AndroidWidget, Laz_And_Controls, zbarcodescannerview;
+  Classes, SysUtils, AndroidWidget, Laz_And_Controls, zbarcodescannerview, And_jni;
  
 type
  
@@ -19,6 +19,8 @@ type
     jTextView1: jTextView;
     jZBarcodeScannerView1: jZBarcodeScannerView;
     procedure AndroidModule1ActivityPause(Sender: TObject);
+    procedure AndroidModule1ActivityResult(Sender: TObject;
+      requestCode: integer; resultCode: TAndroidResult; intentData: jObject);
     procedure AndroidModule1ActivityResume(Sender: TObject);
     procedure AndroidModule1JNIPrompt(Sender: TObject);
     procedure AndroidModule1RequestPermissionResult(Sender: TObject;
@@ -65,6 +67,25 @@ end;
 procedure TAndroidModule1.AndroidModule1ActivityPause(Sender: TObject);
 begin
   if Jzbsc then jZBarcodeScannerView1.StopScan();
+end;
+
+procedure TAndroidModule1.AndroidModule1ActivityResult(Sender: TObject;
+  requestCode: integer; resultCode: TAndroidResult; intentData: jObject);
+var
+  dataResult: string;
+begin
+   if resultCode = RESULT_OK then
+   begin
+      if requestCode = ZXingBarcodeScan1.RequestCodeForResult then //default: 49374
+      begin
+         dataResult:= ZXingBarcodeScan1.GetContentFromResult(intentData);
+         ShowMessage(dataResult); // Success !!!
+      end;
+   end
+   else //RESULT_CANCELED
+   begin
+      ShowMessage('Cancelled ...');
+   end;
 end;
  
 procedure TAndroidModule1.AndroidModule1ActivityResume(Sender: TObject);

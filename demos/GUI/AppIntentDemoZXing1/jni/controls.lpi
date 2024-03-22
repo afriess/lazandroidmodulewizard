@@ -1,16 +1,17 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <CONFIG>
   <ProjectOptions>
-    <Version Value="11"/>
+    <Version Value="12"/>
     <PathDelim Value="\"/>
     <General>
       <Flags>
         <MainUnitHasCreateFormStatements Value="False"/>
         <MainUnitHasTitleStatement Value="False"/>
+        <MainUnitHasScaledStatement Value="False"/>
         <LRSInOutputDirectory Value="False"/>
+        <CompatibilityMode Value="True"/>
       </Flags>
       <SessionStorage Value="InProjectDir"/>
-      <MainUnit Value="0"/>
       <Title Value="controls"/>
       <UseAppBundle Value="False"/>
       <ResourceType Value="res"/>
@@ -18,15 +19,19 @@
     <i18n>
       <EnableI18N LFM="False"/>
     </i18n>
-    <CustomData Count="8">
-      <Item0 Name="BuildSystem" Value="Ant"/>
-      <Item1 Name="LAMW" Value="GUI"/>
-      <Item2 Name="LamwVersion" Value="0.8.4"/>
-      <Item3 Name="NdkApi" Value="android-22"/>
-      <Item4 Name="NdkPath" Value="C:\android\ndkr18b\"/>
-      <Item5 Name="Package" Value="com.example.appintentdemozxing1"/>
-      <Item6 Name="SdkPath" Value="C:\adt32\sdk\"/>
-      <Item7 Name="Theme" Value="DeviceDefault"/>
+    <CustomData Count="12">
+      <Item0 Name="BuildSystem" Value="Gradle"/>
+      <Item1 Name="KeepMyBuildGradleWhenReopen" Value="NO"/>
+      <Item2 Name="LAMW" Value="GUI"/>
+      <Item3 Name="LamwVersion" Value="0.8.6.4"/>
+      <Item4 Name="MinSdk" Value="9"/>
+      <Item5 Name="NdkApi" Value="android-22"/>
+      <Item6 Name="NdkPath" Value="C:\Data\lazdev\HWAndroid\android-ndk-r21e\"/>
+      <Item7 Name="Package" Value="com.example.appintentdemozxing1"/>
+      <Item8 Name="SdkPath" Value="C:\Data\lamw_manager\LAMW\sdk\"/>
+      <Item9 Name="Support" Value="FALSE"/>
+      <Item10 Name="TargetSdk" Value="34"/>
+      <Item11 Name="Theme" Value="DeviceDefault"/>
     </CustomData>
     <BuildModes Count="1">
       <Item1 Name="Default" Default="True"/>
@@ -56,7 +61,7 @@
         <ComponentName Value="AndroidModule1"/>
         <HasResources Value="True"/>
         <CustomData Count="1">
-          <Item0 Name="jControls" Value="jCheckBox;jForm;jIntentManager;jListView;jTextView"/>
+          <Item0 Name="jControls" Value="jCheckBox;jIntentManager;jListView;jTextView"/>
         </CustomData>
       </Unit1>
     </Units>
@@ -65,10 +70,10 @@
     <Version Value="11"/>
     <PathDelim Value="\"/>
     <Target>
-      <Filename Value="..\libs\armeabi\libcontrols"/>
+      <Filename Value="..\libs\armeabi-v7a\libcontrols"/>
     </Target>
     <SearchPaths>
-      <Libraries Value="C:\android\ndkr18b\platforms\android-22\arch-arm\usr\lib\;C:\android\ndkr18b\toolchains\arm-linux-androideabi-4.9\prebuilt\windows-x86_64\lib\gcc\arm-linux-androideabi\4.9.x\"/>
+      <Libraries Value="C:\Data\lazdev\HWAndroid\android-ndk-r21e\platforms\android-22\arch-arm\usr\lib\;C:\Data\lazdev\HWAndroid\android-ndk-r21e\toolchains\arm-linux-androideabi-4.9\prebuilt\windows-x86_64\lib\gcc\arm-linux-androideabi\4.9.x\"/>
       <UnitOutputDirectory Value="..\obj\controls"/>
     </SearchPaths>
     <Parsing>
@@ -97,7 +102,7 @@
       </Options>
     </Linking>
     <Other>
-      <CustomOptions Value="-Xd -CfSoft -CpARMV6 -XParm-linux-androideabi- -FDC:\android\ndkr18b\toolchains\arm-linux-androideabi-4.9\prebuilt\windows-x86_64\bin"/>
+      <CustomOptions Value="-Xd -CfVFPv3 -CpARMV7A -XParm-linux-androideabi- -FDC:\Data\lazdev\HWAndroid\android-ndk-r21e\toolchains\arm-linux-androideabi-4.9\prebuilt\windows-x86_64\bin"/>
     </Other>
   </CompilerOptions>
   <Debugging>

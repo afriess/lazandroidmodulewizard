@@ -1,7 +1,6 @@
 package org.lamw.appjcenterzxingbarcodescandemo1;
 
 import java.lang.reflect.Field;
-
 import android.content.ClipData;
 import android.content.ClipboardManager;
 import android.content.Context;
@@ -566,6 +565,19 @@ public class jTextView extends  TextView { //androidx.appcompat.widget.AppCompat
 	public void SetTextAllCaps(String _text) {
 		this.setAllCaps(true);
 		this.setText(_text);
+	}
+
+	public void SetScrollingMovementMethod() {
+		this.setMovementMethod(new ScrollingMovementMethod());
+	}
+	public void SetVerticalScrollBarEnabled(boolean _value) {
+		this.setVerticalScrollBarEnabled(_value);
+	}
+	public void SetHorizontalScrollBarEnabled(boolean _value) {
+		this.setHorizontalScrollBarEnabled(_value);
+	}
+	public void SetVerticalScrollbarPosition(int _value) {
+		this.setVerticalScrollbarPosition(_value);
 	}
 
 }

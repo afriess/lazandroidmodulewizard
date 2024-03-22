@@ -1,5 +1,6 @@
 package com.example.appintentdemozxing1;
 
+import java.io.File;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
@@ -18,6 +19,21 @@ import android.provider.MediaStore;
 import android.provider.Settings;
 import android.telephony.SmsMessage;
 import android.util.Log;
+import android.app.SearchManager;
+
+import android.graphics.Bitmap;
+import java.io.OutputStream;
+import android.content.ContentValues;
+
+import android.graphics.drawable.BitmapDrawable;
+import android.graphics.drawable.Drawable;
+
+import java.util.ArrayList;
+
+import android.content.ActivityNotFoundException; 
+import android.os.Build;
+import android.widget.Toast;
+
 
 /*Draft java code by "Lazarus Android Module Wizard" [1/18/2015 3:49:46]*/
 /*https://github.com/jmpessoa/lazandroidmodulewizard*/
@@ -30,6 +46,8 @@ public class jIntentManager  {
    private Context  context   = null;
    
    private Intent mIntent;
+   
+   private List mActivities = null;
    
    //GUIDELINE: please, preferentially, init all yours params names with "_", ex: int _flag, String _hello ...
  
@@ -51,6 +69,10 @@ public class jIntentManager  {
          
    public Intent GetIntent() {	 
 	 return mIntent;
+   }
+   
+   public void NewIntent(){
+	 mIntent = new Intent();  
    }
    
    public Intent GetActivityStartedIntent() {
@@ -131,9 +153,14 @@ Sending Data: Extras vs. URI Parameters
 	    */
    }
       
-   public void StartActivityForResult(int _requestCode) {
+   public boolean StartActivityForResult(int _requestCode) {
+	  try{
 	   controls.activity.startActivityForResult(mIntent,_requestCode);
-	   // //startActivityForResult(photoPickerIntent, SELECT_PHOTO);
+      } catch (ActivityNotFoundException e) {
+		  return false;
+	  }
+	  
+	  return true;
    }
       
    /*
@@ -143,17 +170,37 @@ Sending Data: Extras vs. URI Parameters
       startActivity(i); 
    */
       
-   public void StartActivity() {
+   public boolean StartActivity() {
 	   //intent.putExtras .... etc
-	  controls.activity.startActivity(mIntent);
+	  	  
+	  try {
+		  controls.activity.startActivity(mIntent);
+	  } catch (ActivityNotFoundException e) {
+		  return false;
+	  }
+	  
+	  return true;
    }
    
-   public void StartActivity(String _chooserTitle) {	  
-	   controls.activity.startActivity(Intent.createChooser(mIntent, _chooserTitle));
+   public boolean StartActivity(String _chooserTitle) {
+	   
+	  try{
+   		controls.activity.startActivity(Intent.createChooser(mIntent, _chooserTitle));
+      } catch (ActivityNotFoundException e) {
+		  return false;
+	  }
+	  
+	  return true;
    }
    
-   public void StartActivityForResult(int _requestCode, String _chooserTitle) {	  
+   public boolean StartActivityForResult(int _requestCode, String _chooserTitle) {
+	  try{ 
 	   controls.activity.startActivityForResult(Intent.createChooser(mIntent, _chooserTitle),_requestCode);
+      } catch (ActivityNotFoundException e) {
+		  return false;
+	  }
+	  
+	  return true;
    }
             
    /*
@@ -210,6 +257,10 @@ Sending Data: Extras vs. URI Parameters
 	   mIntent.putExtra(_dataName, _value);
    }
    
+   public void PutExtraBool(String _dataName, boolean _value) {
+		  mIntent.putExtra(_dataName, _value);
+   }
+   
    public float[] GetExtraFloatArray(Intent _intent, String _dataName) {
 	   return _intent.getFloatArrayExtra(_dataName);
    }
@@ -240,6 +291,10 @@ Sending Data: Extras vs. URI Parameters
   
    public void PutExtraInt(String _dataName, int _value) {
 	  mIntent.putExtra(_dataName, _value);
+   }
+   
+   public void PutExtraLong(String _dataName, long _value) {
+		  mIntent.putExtra(_dataName, _value);
    }
    
    public String[] GetExtraStringArray(Intent _intent, String _dataName) {	  
@@ -297,6 +352,101 @@ Sending Data: Extras vs. URI Parameters
    public void PutExtraFile(String _environmentDirectoryPath, String _fileName) { //Environment.DIRECTORY_DOWNLOADS
       mIntent.putExtra(Intent.EXTRA_STREAM, Uri.parse("file://"+_environmentDirectoryPath+"/"+ _fileName)); //android.intent.extra.STREAM
    }
+   
+   // Need android.permission.WRITE_EXTERNAL_STORAGE
+   public void PutExtraImage(Bitmap _bmp, String _title) {
+	   if( _bmp == null ) return;
+	   
+	   
+	   String path = MediaStore.Images.Media.insertImage(controls.activity.getContentResolver(), _bmp, _title, null);
+	   
+	   if( path != null ){
+	    Uri uri = Uri.parse(path);
+
+	    mIntent.setType("image/*");	   
+	    mIntent.putExtra(Intent.EXTRA_STREAM, uri); //android.intent.extra.STREAM
+	   }
+   }
+   
+   private void initListActivities(){
+	   if( mActivities != null ) return;
+	   
+	   mActivities = controls.activity.getPackageManager().queryIntentActivities(mIntent, 0);
+   }
+   
+   public void GetShareItemsClear(){
+	   if( mActivities == null ) return;
+	   
+	   mActivities.clear();
+	   mActivities = null;
+   }
+   
+   public int GetShareItemsCount(){
+		  if( mActivities == null ) initListActivities();
+		  
+		  if( mActivities == null ) return 0;
+		  
+		  return mActivities.size();
+   }
+   
+   public String GetShareItemLabel(int pos){
+	      if( mActivities == null ) initListActivities();
+		  
+		  if( mActivities == null ) return "";
+		  if( (pos < 0) || (pos >= mActivities.size()) ) return "";
+		  
+		  ResolveInfo info = (ResolveInfo) mActivities.get(pos);
+			
+		  if(info == null) return "";
+		  
+		  //return info.activityInfo.applicationInfo.loadLabel(controls.activity.getPackageManager()).toString();	
+		  
+		  return info.loadLabel(controls.activity.getPackageManager()).toString();	
+   }
+   
+   public void SetShareItemClass(int pos){
+	   if( mActivities == null ) initListActivities();
+		  
+	   if( mActivities == null ) return;
+	   if( (pos < 0) || (pos >= mActivities.size()) ) return;
+		     
+	   
+       ResolveInfo info = (ResolveInfo) mActivities.get(pos);
+	
+	   if(info == null) return;
+	   
+	   mIntent.setClassName(info.activityInfo.packageName, info.activityInfo.name);
+   }
+   
+   public String GetShareItemPackageName(int pos){
+	   if( mActivities == null ) initListActivities();
+		  
+	   if( mActivities == null ) return "";
+	   if( (pos < 0) || (pos >= mActivities.size()) ) return "";			    
+		   
+	   ResolveInfo info = (ResolveInfo) mActivities.get(pos);
+		
+	   if(info == null) return "";
+		
+	   return info.activityInfo.packageName;
+   }
+   
+   public Bitmap GetShareItemBitmap( int pos ){
+	    if( mActivities == null ) initListActivities();
+		  
+	    if( mActivities == null ) return null;
+	    if( (pos < 0) || (pos >= mActivities.size()) ) return null;			    
+		   
+	    ResolveInfo info = (ResolveInfo) mActivities.get(pos);
+		
+		if(info == null) return null;
+		
+		Drawable icon = info.activityInfo.applicationInfo.loadIcon(context.getPackageManager());
+			
+		if( icon == null ) return null;
+		    
+		return ((BitmapDrawable) icon).getBitmap();		
+   }
       
    public void PutExtraMailSubject(String  _mailSubject) {
 	   mIntent.putExtra(android.content.Intent.EXTRA_SUBJECT, _mailSubject);
@@ -345,6 +495,14 @@ Sending Data: Extras vs. URI Parameters
       return android.provider.MediaStore.Audio.Media.EXTERNAL_CONTENT_URI;
    }
    
+   public Uri GetFilesExternContentUri(){
+      return android.provider.MediaStore.Files.getContentUri("external");
+   }
+
+   public Uri GetImagesExternContentUri(){
+      return android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI;
+   }
+
    public Uri GetVideoExternContentUri(){
 	  return android.provider.MediaStore.Video.Media.EXTERNAL_CONTENT_URI;
    }
@@ -385,12 +543,25 @@ Sending Data: Extras vs. URI Parameters
    public String GetActionCallButtonAsString() { 
       return "android.intent.action.CALL_BUTTON";
    }	   
-   
-   public String GetActionMainAsString() {  
-	     return "android.intent.action.MAIN";
-   }
-   
-   public void SetAction(int  _intentAction) {	 
+
+    public String GetActionMainAsString() {
+        return "android.intent.action.MAIN";
+    }
+
+    public String GetActionInstallPackageAsString() {
+        return "android.intent.ACTION_INSTALL_PACKAGE";
+    }
+
+    public String GetActionDeleteAsString() {
+        return "android.intent.action.DELETE";
+    }
+
+    //TODO Pascal
+    public String GetActionManagerUnknownAppSourcesAsString() {
+        return "Settings.ACTION_MANAGE_UNKNOWN_APP_SOURCES";
+    }
+
+    public void SetAction(int  _intentAction) {
 	  switch(_intentAction) { 
 	    case 0: mIntent.setAction("android.intent.action.VIEW"); break;
 	    case 1: mIntent.setAction("android.intent.action.PICK"); break; 
@@ -414,7 +585,15 @@ Sending Data: Extras vs. URI Parameters
 	    case 19: mIntent.setAction(android.content.Intent.ACTION_VOICE_COMMAND); break;	    	    
 	    case 20: mIntent.setAction(android.content.Intent.ACTION_WEB_SEARCH); break; 	    
 	    case 21: mIntent.setAction("android.intent.action.Main");break;
-	    case 22: mIntent.setAction("android.appwidget.action.APPWIDGET_UPDATE");
+	    case 22: mIntent.setAction("android.appwidget.action.APPWIDGET_UPDATE"); break;
+        case 23: mIntent.setAction("android.intent.ACTION_INSTALL_PACKAGE"); break;
+        case 24: mIntent.setAction("android.intent.action.DELETE"); break;
+        case 25: // Requires API level 26
+        	     if( android.os.Build.VERSION.SDK_INT >= 26 )
+        	      mIntent.setAction(Settings.ACTION_MANAGE_UNKNOWN_APP_SOURCES); break;
+        case 26: // Requires API level 23
+   	             if( android.os.Build.VERSION.SDK_INT >= 23 )
+        	      mIntent.setAction(Settings.ACTION_MANAGE_OVERLAY_PERMISSION); break;
 	  }
 	  
    }
@@ -519,7 +698,28 @@ Sending Data: Extras vs. URI Parameters
      } else return null;   
      
    }
-   
+
+    public String[] GetBundleContent(Intent _intent, String keyValueDelimiter) {
+
+        Bundle extras = _intent.getExtras();
+
+        if (extras != null) {
+            int i;
+            Set keys = extras.keySet();
+            String[] strKeys = new String[keys.size()];
+            Iterator iterate = keys.iterator();
+            i = 0;
+            while (iterate.hasNext()) {
+                String key = (String) iterate.next();
+                strKeys[i] = key + keyValueDelimiter +  extras.get(key) ;
+                i++;
+            }
+            return strKeys;
+
+        } else return null;
+
+    }
+
    public String GetActionImageCaptureAsString() {
 	     return "android.media.action.IMAGE_CAPTURE";
    }
@@ -562,6 +762,21 @@ Sending Data: Extras vs. URI Parameters
 	   mIntent.putExtra(MediaStore.EXTRA_OUTPUT, Uri.parse("file://"+_environmentDirectoryPath+"/"+ _fileName));
    }
    
+   public void PutExtraContactWebSite( String _website ){
+	   ArrayList arrayList = new ArrayList();
+	   
+       ContentValues contentValues = new ContentValues();
+       
+       String str = "mimetype";
+       contentValues.put(str, "vnd.android.cursor.item/website");
+       String str2 = "data1";
+       contentValues.put(str2, _website);
+       
+       arrayList.add(contentValues);
+       
+       mIntent.putParcelableArrayListExtra("data", arrayList);
+   }
+   
    public String GetActionCameraCropAsString() {
 	  return "com.android.camera.action.CROP"; //http://shaikhhamadali.blogspot.com.br/2013/09/capture-images-and-crop-images-using.html
    }
@@ -569,31 +784,52 @@ Sending Data: Extras vs. URI Parameters
    public void AddCategory(int  _intentCategory) {	   
 	  switch(_intentCategory) {
 	  
-	    case 0: mIntent.addCategory(Intent.CATEGORY_DEFAULT);	  
-	   	case 1: mIntent.addCategory(Intent.CATEGORY_LAUNCHER);
-	   	case 2: mIntent.addCategory(Intent.CATEGORY_HOME);
-	   	case 3: mIntent.addCategory(Intent.CATEGORY_INFO);
-	   	case 4: mIntent.addCategory(Intent.CATEGORY_PREFERENCE);	   		   	
-	   	case 5: mIntent.addCategory(Intent.CATEGORY_APP_BROWSER);
-	   	case 6: mIntent.addCategory(Intent.CATEGORY_APP_CALCULATOR);
-	   	case 7: mIntent.addCategory(Intent.CATEGORY_APP_CALENDAR);
-	   	case 8: mIntent.addCategory(Intent.CATEGORY_APP_CONTACTS);
-	   	case 9: mIntent.addCategory(Intent.CATEGORY_APP_EMAIL);	   	
-	   	case 10: mIntent.addCategory(Intent.CATEGORY_APP_GALLERY);	   		   	
-	   	case 11: mIntent.addCategory(Intent.CATEGORY_APP_MAPS);	   	
-	   	case 12: mIntent.addCategory(Intent.CATEGORY_APP_MESSAGING);
-	   	case 13: mIntent.addCategory(Intent.CATEGORY_APP_MUSIC);
+	    case 0: mIntent.addCategory(Intent.CATEGORY_DEFAULT); break;	  
+	   	case 1: mIntent.addCategory(Intent.CATEGORY_LAUNCHER); break;
+	   	case 2: mIntent.addCategory(Intent.CATEGORY_HOME); break;
+	   	case 3: mIntent.addCategory(Intent.CATEGORY_INFO); break;
+	   	case 4: mIntent.addCategory(Intent.CATEGORY_PREFERENCE); break;	   		   	
+	   	case 5: mIntent.addCategory(Intent.CATEGORY_APP_BROWSER); break;
+	   	case 6: mIntent.addCategory(Intent.CATEGORY_APP_CALCULATOR); break;
+	   	case 7: mIntent.addCategory(Intent.CATEGORY_APP_CALENDAR); break;
+	   	case 8: mIntent.addCategory(Intent.CATEGORY_APP_CONTACTS); break;
+	   	case 9: mIntent.addCategory(Intent.CATEGORY_APP_EMAIL); break;	   	
+	   	case 10: mIntent.addCategory(Intent.CATEGORY_APP_GALLERY); break;	   		   	
+	   	case 11: mIntent.addCategory(Intent.CATEGORY_APP_MAPS); break;	   	
+	   	case 12: mIntent.addCategory(Intent.CATEGORY_APP_MESSAGING); break;
+	   	case 13: mIntent.addCategory(Intent.CATEGORY_APP_MUSIC); break;
+	   	case 14: mIntent.addCategory(Intent.CATEGORY_OPENABLE); break;
 
 	  }		
    }
    
    public void SetFlag(int _intentFlag) {	   
 	   switch(_intentFlag) {
-	   	 case 0: mIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-	   	 case 1: mIntent.setFlags(Intent.FLAG_ACTIVITY_BROUGHT_TO_FRONT);
-	   	 case 2: mIntent.setFlags(Intent.FLAG_ACTIVITY_TASK_ON_HOME);
-	   	 case 3: mIntent.setFlags(Intent.FLAG_ACTIVITY_FORWARD_RESULT);
-	  	 case 4: mIntent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_WHEN_TASK_RESET);
+	   	 case 0: mIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK); break;
+	   	 case 1: mIntent.setFlags(Intent.FLAG_ACTIVITY_BROUGHT_TO_FRONT); break;
+	   	 case 2: mIntent.setFlags(Intent.FLAG_ACTIVITY_TASK_ON_HOME); break;
+	   	 case 3: mIntent.setFlags(Intent.FLAG_ACTIVITY_FORWARD_RESULT); break;
+	  	 case 4: // Requires API level 21
+    	         if( android.os.Build.VERSION.SDK_INT >= 21 )
+	  		      mIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_DOCUMENT); break; // Depreciaded 21+  mIntent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_WHEN_TASK_RESET);  
+         case 5: mIntent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP); break;
+         case 6: mIntent.setFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION); break;
+         case 7: mIntent.setFlags(Intent.FLAG_GRANT_WRITE_URI_PERMISSION); break;         
+	  }
+   }
+   
+   public void AddFlag(int _intentFlag) {	   
+	   switch(_intentFlag) {
+	   	 case 0: mIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK); break;
+	   	 case 1: mIntent.addFlags(Intent.FLAG_ACTIVITY_BROUGHT_TO_FRONT); break;
+	   	 case 2: mIntent.addFlags(Intent.FLAG_ACTIVITY_TASK_ON_HOME); break;
+	   	 case 3: mIntent.addFlags(Intent.FLAG_ACTIVITY_FORWARD_RESULT); break;
+	  	 case 4: // Requires API level 21
+	             if( android.os.Build.VERSION.SDK_INT >= 21 )
+	  		      mIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_DOCUMENT); break; // Depreciaded 21+  mIntent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_WHEN_TASK_RESET);
+         case 5: mIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP); break;
+         case 6: mIntent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION); break;
+         case 7: mIntent.setFlags(Intent.FLAG_GRANT_WRITE_URI_PERMISSION); break;
 	  }
    }
    
@@ -676,7 +912,13 @@ Sending Data: Extras vs. URI Parameters
    public void SetDataAndType(String _uriAsString, String _mimeType) {	// thanks to @alexc   
 	   mIntent.setDataAndType(Uri.parse(_uriAsString), _mimeType);
    }
-
+   
+   public void SetDataPackage() {	
+	   Uri uri = Uri.fromParts("package", controls.activity.getPackageName(), null);
+	   
+	   mIntent.setData(uri);
+   }
+   
    /*
  public void SetDataUriAsString(String _uriAsString) { //Uri.parse(fileUrl) - just Strings!
 	   
@@ -715,5 +957,30 @@ Sending Data: Extras vs. URI Parameters
         }
         return str;
     }
+
+    //https://forum.lazarus.freepascal.org/index.php/topic,55344.0.html
+    //thanks to schumi !
+    public byte[] GetExtraByteArray(Intent _intent, String _dataName) {
+        return _intent.getByteArrayExtra(_dataName);
+    }
+
+    public void PutExtraByteArray(String _dataName, byte[] _values) {
+        mIntent.putExtra(_dataName, _values);
+    }
+
+    public String ByteArrayToString(byte[] _byteArray) {
+        return (new String(_byteArray));
+    }
+
+    public Uri GetUriFromFile(String _fullFileName) {
+       Uri r = null;
+        try {
+            r = Uri.fromFile(new File(_fullFileName));
+        } catch (Exception e) {
+            Toast.makeText(controls.activity,"[GetUriFromFile] File Not found...",Toast.LENGTH_SHORT).show();
+        }
+        return r;
+    }
+
 }
 

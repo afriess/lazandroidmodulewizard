@@ -166,18 +166,18 @@ public class jcDatalogic extends Activity implements ReadListener,
 
     @Override
     public void onScanStarted() {
-        status.setTextColor(Color.RED);
-        status.setText("Scanning");
+        //status.setTextColor(Color.RED);
+        //status.setText("Scanning");
 
-        showScanResult.setText("");
-        showMessage("Scanner Started");
+        //showScanResult.setText("");
+        //showMessage("Scanner Started");
         Log.d(TAG, "Scan start");
     }
 
     @Override
     public void onRead(DecodeResult result) {
-        status.setTextColor(Color.rgb(51, 153, 51));
-        status.setText("Result");
+        //status.setTextColor(Color.rgb(51, 153, 51));
+        //status.setText("Result");
 
         showScanResult.append("Barcode Type: " + result.getBarcodeID()+ "\n");
         String string = result.getText();
@@ -198,7 +198,8 @@ public class jcDatalogic extends Activity implements ReadListener,
         Log.d(TAG, "Data[]: " + bData.toString());
         Log.d(TAG, "As hex: " + bDataHex);
 
-        showMessage("Scanner Read");
+        //showMessage("Scanner Read");
+	pOnBarcodeRead(pascalObj,symb,text); // return void
     }
 
     @Override
@@ -265,9 +266,6 @@ public class jcDatalogic extends Activity implements ReadListener,
         hexString.append(']');
         return hexString.toString();
     }
-
-    public native void pOnjcDatalogicDataArrived(long pasobj, String barcode); //jcDatalogic
-
 
     public Bitmap GetDeviceImage() {
         Bitmap img = SYSTEM.DEVICE_IMAGE;

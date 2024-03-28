@@ -303,8 +303,7 @@ uses
    procedure Java_Event_pOnArduinoAflakSerialStatusChanged(env:PJNIEnv;this:JObject;Sender:TObject;statusMessage:jString);
    
    // jcDatalogic
-   procedure Java_Event_pOnjcDatalogicDataArrived(env:PJNIEnv;this:JObject;Sender:TObject;msgContent:jString);
-
+   procedure Java_Event_pOnBarcodeRead(env:PJNIEnv;this:JObject;Sender:TObject;symbol:jString;bc:jString);
 
 implementation
 
@@ -3230,14 +3229,15 @@ begin
 end;
 
 // jcDatalogic
-procedure Java_Event_pOnjcDatalogicDataArrived(env:PJNIEnv;this:JObject;Sender:TObject;msgContent:jString);
+procedure Java_Event_pOnBarcodeRead(env:PJNIEnv;this:JObject;Sender:TObject;symbol:jString;bc:jString);
 begin
   gApp.Jni.jEnv:= env;
   gApp.Jni.jThis:= this;
   if Sender is jcDatalogic then
   begin
-    jcDatalogic(Sender).pOnjcDatalogicDataArrived(Sender,GetString(env,msgContent));
+    jcDatalogic(Sender).GenEvent_OnjcDatalogicBarcodeRead(Sender,GetString(env,symbol),GetString(env,bc));
   end;
-end;  
+end;
+ 
 
 end.

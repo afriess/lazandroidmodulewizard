@@ -14,8 +14,11 @@ type
 
 {jControl template}
 
+TOnjcDatalogicBarcodeRead=procedure(Sender:TObject;symbol:string;bc:string) of object;
+
 jcDatalogic = class(jControl)
  private
+   FOnBarcodeRead: TOnjcDatalogicBarcodeRead;
 
  public
     constructor Create(AOwner: TComponent); override;
@@ -24,19 +27,18 @@ jcDatalogic = class(jControl)
     function jCreate(): jObject;
     procedure jFree();
   public
-    procedure pOnjcDatalogicDataArrived(Sender: TObject; barcode: string);
     function GetDeviceImage(): jObject;
     function GetScannerType(): string;
     function GetDeviceDescription(): string;
-
+    procedure GenEvent_OnjcDatalogicBarcodeRead(Sender:TObject;symbol:string;bc:string);
  published
+   property OnBarcodeRead: TOnjcDatalogicBarcodeRead read FOnBarcodeRead write FOnBarcodeRead;
 
 end;
 
 function jcDatalogic_jCreate(env: PJNIEnv;_self: int64; this: jObject): jObject;
 procedure jcDatalogic_jFree(env: PJNIEnv; _jcdatalogic: JObject);
 
-procedure jcDatalogic_pOnjcDatalogicDataArrived(env: PJNIEnv; _jcdatalogic: JObject; barcode: string);
 function jcDatalogic_GetDeviceImage(env: PJNIEnv; _jcdatalogic: JObject): jObject;
 function jcDatalogic_GetScannerType(env: PJNIEnv; _jcdatalogic: JObject): string;
 function jcDatalogic_GetDeviceDescription(env: PJNIEnv; _jcdatalogic: JObject): string;
@@ -91,13 +93,6 @@ begin
   //in designing component state: set value here...
   if FInitialized then
      jcDatalogic_jFree(gApp.jni.jEnv, FjObject);
-end;
-
-procedure jcDatalogic.pOnjcDatalogicDataArrived(Sender: TObject; barcode: string);
-begin
-  //in designing component state: set value here...
-  if FInitialized then
-     jcDatalogic_pOnjcDatalogicDataArrived(gApp.jni.jEnv, FjObject, barcode);
 end;
 
 {-------- jcDatalogic_JNI_Bridge ----------}
@@ -170,6 +165,13 @@ begin
   if FInitialized then
     Result:= jcDatalogic_GetDeviceDescription(gApp.jni.jEnv, FjObject);
 end;
+
+
+procedure jcDatalogic.GenEvent_OnjcDatalogicBarcodeRead(Sender:TObject;symbol:string;bc:string);
+begin
+  if Assigned(FOnBarcodeRead) then FOnBarcodeRead(Sender,symbol,bc);
+end;
+
 
 {-------- jcDatalogic_JNI_Bridge ----------}
 
@@ -246,30 +248,7 @@ begin
   _exceptionOcurred: jni_ExceptionOccurred(env);
 end;
 
-procedure jcDatalogic_pOnjcDatalogicDataArrived(env: PJNIEnv; _jcdatalogic: JObject; barcode: string);
-var
-  jParams: array[0..1] of jValue;
-  jMethod: jMethodID=nil;
-  jCls: jClass=nil;
-label
-  _exceptionOcurred;
-begin
-
-  if (env = nil) or (_jcdatalogic = nil) then exit;
-  jCls:= env^.GetObjectClass(env, _jcdatalogic);
-  if jCls = nil then goto _exceptionOcurred;
-  jMethod:= env^.GetMethodID(env, jCls, 'pOnjcDatalogicDataArrived', '(JLjava/lang/String;)V');
-  if jMethod = nil then begin env^.DeleteLocalRef(env, jCls); goto _exceptionOcurred; end;
-
-  jParams[0].l:= env^.NewStringUTF(env, PChar(barcode));
-
-  env^.CallVoidMethodA(env, _jcdatalogic, jMethod, @jParams);
-env^.DeleteLocalRef(env,jParams[0].l);
-
-  env^.DeleteLocalRef(env, jCls);
-
-  _exceptionOcurred: jni_ExceptionOccurred(env);
-end;
-
 
 end.
+
+

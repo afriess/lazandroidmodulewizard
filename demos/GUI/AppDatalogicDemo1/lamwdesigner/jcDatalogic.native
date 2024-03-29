@@ -1,0 +1,1 @@
+public native void pOnBarcodeRead(long pasobj, String symbol, String bc);

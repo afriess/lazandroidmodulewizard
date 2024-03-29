@@ -14,11 +14,11 @@ type
 
 {jControl template}
 
-TOnjcDatalogicBarcodeRead=procedure(Sender:TObject;symbol:string;bc:string) of object;
+TOnBarcodeRead=procedure(Sender:TObject;symbol:string;bc:string) of object;
 
 jcDatalogic = class(jControl)
  private
-   FOnBarcodeRead: TOnjcDatalogicBarcodeRead;
+   FOnBarcodeRead: TOnBarcodeRead;
 
  public
     constructor Create(AOwner: TComponent); override;
@@ -30,9 +30,9 @@ jcDatalogic = class(jControl)
     function GetDeviceImage(): jObject;
     function GetScannerType(): string;
     function GetDeviceDescription(): string;
-    procedure GenEvent_OnjcDatalogicBarcodeRead(Sender:TObject;symbol:string;bc:string);
+    procedure GenEvent_OnBarcodeRead(Sender:TObject;symbol:string;bc:string);
  published
-   property OnBarcodeRead: TOnjcDatalogicBarcodeRead read FOnBarcodeRead write FOnBarcodeRead;
+   property OnBarcodeRead: TOnBarcodeRead read FOnBarcodeRead write FOnBarcodeRead;
 
 end;
 
@@ -105,7 +105,6 @@ var
 label
   _exceptionOcurred;
 begin
-
   Result := nil;
 
   if (env = nil) or (this = nil) then exit;
@@ -117,7 +116,6 @@ begin
   jParams[0].j:= _self;
 
   Result:= env^.CallObjectMethodA(env, this, jMethod, @jParams);
-
   Result:= env^.NewGlobalRef(env, Result);
 
   _exceptionOcurred: if jni_ExceptionOccurred(env) then result := nil;
@@ -167,7 +165,7 @@ begin
 end;
 
 
-procedure jcDatalogic.GenEvent_OnjcDatalogicBarcodeRead(Sender:TObject;symbol:string;bc:string);
+procedure jcDatalogic.GenEvent_OnBarcodeRead(Sender:TObject;symbol:string;bc:string);
 begin
   if Assigned(FOnBarcodeRead) then FOnBarcodeRead(Sender,symbol,bc);
 end;

@@ -199,7 +199,9 @@ public class jcDatalogic extends Activity implements ReadListener,
         Log.d(TAG, "As hex: " + bDataHex);
 
         //showMessage("Scanner Read");
-	pOnBarcodeRead(pascalObj,symb,text); // return void
+	controls.pOnBarcodeRead(pascalObj,symb,text); // return void
+
+        // None: 	pOnBarcodeRead(pascalObj,symb,text); // return void
     }
 
     @Override

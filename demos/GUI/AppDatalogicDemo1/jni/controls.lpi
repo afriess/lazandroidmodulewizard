@@ -53,8 +53,12 @@
         <IsPartOfProject Value="True"/>
         <ComponentName Value="AndroidModule1"/>
         <CustomData Count="1">
-          <Item0 Name="jControls" Value="jButton;jcDatalogic;jEditText;jForm"/>
+          <Item0 Name="jControls" Value="jButton;jcDatalogic;jEditText;jForm;jTextView"/>
         </CustomData>
+      </Unit>
+      <Unit>
+        <Filename Value="..\build.gradle"/>
+        <IsPartOfProject Value="True"/>
       </Unit>
     </Units>
   </ProjectOptions>
@@ -90,6 +94,9 @@
         <StripSymbols Value="True"/>
       </Debugging>
       <LinkSmart Value="True"/>
+      <Options>
+        <ExecutableType Value="Library"/>
+      </Options>
     </Linking>
     <Other>
       <CustomOptions Value="-Xd -CfVFPV3 -CpARMV7A -XParm-linux-androideabi- -FDC:\Data\lazdev\HWAndroid\android-ndk-r21e\toolchains\arm-linux-androideabi-4.9\prebuilt\windows-x86_64\bin"/>

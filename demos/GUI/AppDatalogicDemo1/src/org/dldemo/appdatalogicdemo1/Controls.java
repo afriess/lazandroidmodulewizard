@@ -1546,4 +1546,8 @@ public java.lang.Object jEditText_Create(long pasobj ) {
 public native void pEditTextOnActionIconTouchUp(long pasobj, String textContent);
 public native void pEditTextOnActionIconTouchDown(long pasobj, String textContent);
 
+public  java.lang.Object jTextView_Create(long pasobj) {
+  return (java.lang.Object)( new jTextView(this.activity,this,pasobj));
+}
+
 }

@@ -1,4 +1,6 @@
 object AndroidModule1: TAndroidModule1
+  OnCreate = AndroidModule1Create
+  OnDestroy = AndroidModule1Destroy
   MarginLeft = 0
   MarginTop = 0
   MarginRight = 0
@@ -15,4 +17,145 @@ object AndroidModule1: TAndroidModule1
   AnimationDurationIn = 1500
   AnimationDurationOut = 1500
   AnimationMode = animNone
+  OnInit = AndroidModule1Init
+  OnJNIPrompt = AndroidModule1JNIPrompt
+  object BuWork: jButton
+    MarginLeft = 5
+    MarginTop = 5
+    MarginRight = 5
+    MarginBottom = 5
+    Enabled = True
+    Left = 5
+    Top = 345
+    Width = 310
+    Height = 50
+    Visible = True
+    PosRelativeToAnchor = []
+    PosRelativeToParent = [rpBottom, rpLeft, rpRight]
+    LayoutParamWidth = lpExact
+    LayoutParamHeight = lpWrapContent
+    Text = 'Work'
+    BackgroundColor = colbrDefault
+    FontColor = colbrDefault
+    FontSize = 0
+    FontSizeUnit = unitDefault
+    GravityInParent = lgNone
+    OnClick = BuWorkClick
+  end
+  object EdtScan: jEditText
+    MarginLeft = 5
+    MarginTop = 5
+    MarginRight = 5
+    MarginBottom = 5
+    Enabled = True
+    Left = 5
+    Top = 5
+    Width = 310
+    Height = 39
+    Visible = True
+    PosRelativeToAnchor = []
+    PosRelativeToParent = [rpTop, rpLeft, rpRight]
+    LayoutParamWidth = lpExact
+    LayoutParamHeight = lpWrapContent
+    Text = 'Scan'
+    Alignment = taCenter
+    InputTypeEx = itxText
+    MaxTextLength = -1
+    BackgroundColor = colbrDefault
+    FontColor = colbrDefault
+    FontSize = 0
+    HintTextColor = colbrDefault
+    ScrollBarStyle = scrNone
+    MaxLines = 5
+    HorScrollBar = True
+    VerScrollBar = True
+    WrappingLine = False
+    Editable = True
+    FontSizeUnit = unitDefault
+    CloseSoftInputOnEnter = True
+    CapSentence = False
+    CaptureBackPressed = False
+    GravityInParent = lgNone
+    OnChanged = EdtScanChanged
+  end
+  object TxtVBarcode: jTextView
+    MarginLeft = 10
+    MarginTop = 5
+    MarginRight = 10
+    MarginBottom = 5
+    Enabled = True
+    Left = 15
+    Top = 54
+    Width = 290
+    Height = 20
+    Visible = True
+    Anchor = EdtScan
+    PosRelativeToAnchor = [raBelow, raAlignLeft, raAlignRight]
+    PosRelativeToParent = []
+    LayoutParamWidth = lpWrapContent
+    LayoutParamHeight = lpWrapContent
+    Text = 'Nothing'
+    Alignment = taCenter
+    BackgroundColor = colbrDefault
+    FontColor = colbrDefault
+    FontSize = 0
+    TextTypeFace = tfNormal
+    FontSizeUnit = unitDefault
+    GravityInParent = lgNone
+  end
+  object TxtVDL: jTextView
+    MarginLeft = 0
+    MarginTop = 5
+    MarginRight = 0
+    MarginBottom = 5
+    Enabled = True
+    Left = 15
+    Top = 84
+    Width = 290
+    Height = 20
+    Visible = True
+    Anchor = TxtVBarcode
+    PosRelativeToAnchor = [raBelow, raAlignLeft, raAlignRight]
+    PosRelativeToParent = []
+    LayoutParamWidth = lpWrapContent
+    LayoutParamHeight = lpWrapContent
+    Text = 'FromEvent'
+    Alignment = taLeft
+    BackgroundColor = colbrDefault
+    FontColor = colbrDefault
+    FontSize = 0
+    TextTypeFace = tfNormal
+    FontSizeUnit = unitDefault
+    GravityInParent = lgNone
+  end
+  object TxtVInfo: jTextView
+    MarginLeft = 0
+    MarginTop = 5
+    MarginRight = 0
+    MarginBottom = 5
+    Enabled = True
+    Left = 15
+    Top = 114
+    Width = 290
+    Height = 20
+    Visible = True
+    Anchor = TxtVDL
+    PosRelativeToAnchor = [raBelow, raAlignLeft, raAlignRight]
+    PosRelativeToParent = []
+    LayoutParamWidth = lpWrapContent
+    LayoutParamHeight = lpWrapContent
+    Text = 'Info'
+    Alignment = taLeft
+    BackgroundColor = colbrDefault
+    FontColor = colbrDefault
+    FontSize = 0
+    TextTypeFace = tfNormal
+    FontSizeUnit = unitDefault
+    GravityInParent = lgNone
+  end
+  object Datalogic1: jcDatalogic
+    OnBarcodeRead = Datalogic1BarcodeRead
+    Left = 272
+    Top = 40
+  end
 end
